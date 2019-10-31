@@ -8,15 +8,27 @@
 
 
 using namespace std;
-
-
-
+#define INSERT 1
+#define PRINT 2
+void callFunc(int fIndex, int *argv[]){
+    switch(fIndex){
+        case INSERT: insert(argv[0],argv[1],argv[1]);break;
+        case PRINT : printBuilding(argv[0]);break;
+        default:break;
+    }
+}
+// TODO finish the file parser
 int myParser(string str){
     int i=0;
-//    while(str[i]){
-//
-//    }
+
+    while(str[i]){
+        while(str[i]!=':'){
+
+        }
+    }
 }
+
+
 int main(int argc, char const *argv[]) {
     // don't use 1st element to simplify calculation
     int arr[2001] = {0, 2, 3, 4, 5, 6, 7, 8, 9};
