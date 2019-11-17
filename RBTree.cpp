@@ -5,20 +5,20 @@
 #include "RBTree.h"
 
 
-RBTree::rbNode *RBTree::repair(RBTree::rbNode *n) {
+rbNode *RBTree::repair(rbNode *n) {
     return nullptr;
 }
 
-RBTree::rbNode *RBTree::grandP(RBTree::rbNode *n) {
+rbNode *RBTree::grandP(rbNode *n) {
     return parent(parent(n));
 }
 
-RBTree::rbNode *RBTree::parent(RBTree::rbNode *n) {
+rbNode *RBTree::parent(rbNode *n) {
     // handle nullptr
     return n ? n->p : n;
 }
 
-RBTree::rbNode *RBTree::sibling(RBTree::rbNode *n) {
+rbNode *RBTree::sibling(rbNode *n) {
     // handle nullptr
     if (n == nullptr) return nullptr;
     rbNode *p;

@@ -5,27 +5,28 @@
 #ifndef RISINGCITY_RBTREE_H
 #define RISINGCITY_RBTREE_H
 
+enum color_t {
+    BLACK, RED
+};
+enum lr_t {
+    LEFT, RIGHT
+};
+enum icase_t {
+    i1, i2, i3, i4, i5
+};
+enum rmcase_t {
+    rm1, rm2, rm3, rm4, rm5, rm6
+};
+struct rbNode {
+    rbNode *p; // parent
+    rbNode *l; // left sibling
+    rbNode *r; // right sibling
+    color_t color; //
+    int key;
+};
 
 class RBTree {
-    enum color_t {
-        BLACK, RED
-    };
-    enum lr_t {
-        LEFT, RIGHT
-    };
-    enum icase_t {
-        i1, i2, i3, i4, i5
-    };
-    enum rmcase_t {
-        rm1, rm2, rm3, rm4, rm5, rm6
-    };
-    struct rbNode {
-        rbNode *p; // parent
-        rbNode *l; // left sibling
-        rbNode *r; // right sibling
-        color_t color; //
-        int key;
-    };
+    rbNode node{};
 
     rbNode *grandP(rbNode *n);
 
@@ -59,6 +60,7 @@ class RBTree {
 
     rbNode *rmNode0(rbNode *n);
 
+    void printRBTree(rbNode *n);
 };
 
 

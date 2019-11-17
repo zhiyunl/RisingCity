@@ -5,7 +5,8 @@
  * @LastEditTime: 2019-11-16 18:39:40
  * @Description: 
  */
-
+#include <iostream>
+#include <cmath>
 #include "MinHeap.h"
 
 /*
@@ -92,10 +93,29 @@ int MinHeap::removeMin() {
 
 int MinHeap::decreaseKey(int index, int d) {
     heap[index] -= d;
-    // TODO
+    // TODO finish decrease Key
 //   need to check if child is smaller than parent
 //   if so, need a percolation up
 
     return heap[index];
+}
+
+void MinHeap::printHeap() {
+    int i = 1;
+    int level = 1;
+    // first element is not used!
+    std::cout << std::endl << "---------" << std::endl;
+    while (heap[i]) { //complete binary tree
+        // first row is 1 2>=2^1
+        // second row is 2 3 4>=2^2
+        // third row is 4 5 6 7 8>=2^3
+        // ...
+        if (i >= pow(2, level)) {
+            std::cout << std::endl;
+            level++;
+        }
+        std::cout << heap[i++] << "\t";
+    }
+    std::cout << std::endl << "---------" << std::endl;
 }
 

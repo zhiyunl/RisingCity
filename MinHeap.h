@@ -28,6 +28,8 @@ public:
     int removeMin();
 
     int decreaseKey(int index, int d);
+
+    void printHeap();
 //    int
 };
 
