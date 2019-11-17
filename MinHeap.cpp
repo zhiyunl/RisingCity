@@ -1,6 +1,10 @@
-//
-// Created by zhiyunl on 10/21/19.
-//
+/*
+ * @Author: zhiyunl
+ * @Date: 2019-10-21 15:08:53
+ * @LastEditors: zhiyunl
+ * @LastEditTime: 2019-11-16 18:39:40
+ * @Description: 
+ */
 
 #include "MinHeap.h"
 //using namespace RISINGCITY_MINHEAP_H;
@@ -19,7 +23,7 @@ int MinHeap::init(int *arr) {
     return 0;
 }
 
-int MinHeap::insert(int x) {
+int MinHeap::insert(int key) {
     /*
      * insert next to last node, heapify by compare it with parents,
      * swap if needed,
@@ -30,7 +34,7 @@ int MinHeap::insert(int x) {
 //    for (int i = 0; heap[i] ; ++i) {
 //        len=i+1;
 //    }
-    heap[++len] = x;
+    heap[++len] = key;
     heapify(len);
     return 0;
 }
