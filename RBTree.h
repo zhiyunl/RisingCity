@@ -14,10 +14,10 @@ class RBTree {
         LEFT, RIGHT
     };
     enum icase_t {
-        1, 2, 3, 4
+        i1, i2, i3, i4, i5
     };
     enum rmcase_t {
-        1, 2, 3, 4, 5, 6
+        rm1, rm2, rm3, rm4, rm5, rm6
     };
     struct rbNode {
         rbNode *p; // parent

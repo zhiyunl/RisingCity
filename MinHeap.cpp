@@ -7,7 +7,6 @@
  */
 
 #include "MinHeap.h"
-//using namespace RISINGCITY_MINHEAP_H;
 
 /*
  * use array to represent min heap
@@ -93,6 +92,10 @@ int MinHeap::removeMin() {
 
 int MinHeap::decreaseKey(int index, int d) {
     heap[index] -= d;
+    // TODO
+//   need to check if child is smaller than parent
+//   if so, need a percolation up
+
     return heap[index];
 }
 

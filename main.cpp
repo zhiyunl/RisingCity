@@ -14,13 +14,26 @@
 
 using namespace std;
 
+#define INSERT 1
+#define PRINT 2
 
-int myParser(const string &str) {
-    int i = 0;
-//    while(str[i]){
-//
+//void callFunc(int fIndex, int *argv[]){
+//    switch(fIndex){
+//        case INSERT: insert(argv[0],argv[1],argv[1]);break;
+//        case PRINT : printBuilding(argv[0]);break;
+//        default:break;
 //    }
-    return 0;
+//}
+// TODO finish the file parser
+int myParser(string str) {
+    int i = 0;
+
+//    while(str[i]){
+//        while(str[i]!=':'){
+//
+//        }
+//    }
+    return 1;
 }
 
 int readFile(const string &fname) {
@@ -64,7 +77,7 @@ int main(int argc, char const *argv[]) {
     // don't use 1st element to simplify calculation
     //used for in-place minHeap
     int arr[2001] = {0, 2, 3, 4, 5, 6, 7, 8, 9};
-    const int *rb = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int rb[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     string filename = argv[1];
     cout << argv[1] << endl;
     readFile(filename);

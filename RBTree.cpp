@@ -2,13 +2,8 @@
 // Created by zhiyunl on 11/16/19.
 //
 
-#include <zconf.h>
 #include "RBTree.h"
 
-
-rbNode *getParent(rbNode *n) {
-    return n == nullptr ? nullptr : n->p;
-}
 
 RBTree::rbNode *RBTree::repair(RBTree::rbNode *n) {
     return nullptr;
