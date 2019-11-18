@@ -3,8 +3,9 @@
 //
 
 #include "RBTree.h"
+#include <iostream>
 
-
+// TODO
 rbNode *RBTree::repair(rbNode *n) {
     return nullptr;
 }
@@ -48,6 +49,7 @@ bool RBTree::notNull(rbNode *n) {
     return !n && n != nullptr; //n could be NULL or nullptr
 }
 
+// TODO
 rbNode *RBTree::rbInit(int *arr) {
     // init tree using multiple insert
     int i = 0;
@@ -55,5 +57,19 @@ rbNode *RBTree::rbInit(int *arr) {
         rbInsert(&(this->node), arr[i]);
     }
     rbPrint(&this->node);
+    return nullptr;
+}
+
+// TODO
+void RBTree::rbPrint(rbNode *n) {
+    // should start from root n
+    // check left and right, if both null, stop
+    // else print left and right
+    if (notNull(n)) { ;
+    }
+}
+
+// TODO
+rbNode *RBTree::rbInsert(rbNode *n, int key) {
     return nullptr;
 }

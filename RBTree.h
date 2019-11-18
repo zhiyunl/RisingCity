@@ -5,6 +5,7 @@
 #ifndef RISINGCITY_RBTREE_H
 #define RISINGCITY_RBTREE_H
 
+
 enum color_t {
     BLACK, RED
 };

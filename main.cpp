@@ -101,11 +101,13 @@ int lineParser(string str) {
 }
 
 int readFile(const string &fname) {
+    cout << "-------------Read input file-----------" << endl;
     fstream f;
-    f.open("../" + fname, ios::in);
+    f.open(fname, ios::in);
     string str;
     if (f.fail()) {
-        cout << "error" << endl;
+        cout << "Failed to open input file!!!" << endl;
+        throw system_error();
     } else {
         while (f) {
             getline(f, str);
@@ -120,6 +122,7 @@ int readFile(const string &fname) {
 }
 
 int minHeapTest(int *arr) {
+    cout << "\n-------------Start Min Heap Test----------" << endl;
     MinHeap myheap{};
     myheap.init(arr); // in-place modify
 //    myheap.printHeap();
