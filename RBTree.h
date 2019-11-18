@@ -26,7 +26,12 @@ struct rbNode {
 };
 
 class RBTree {
+
+    bool notNull(rbNode *n);
+
     rbNode node{};
+
+    rbNode *rbInit(int *arr); //use
 
     rbNode *grandP(rbNode *n);
 
@@ -60,7 +65,7 @@ class RBTree {
 
     rbNode *rmNode0(rbNode *n);
 
-    void printRBTree(rbNode *n);
+    void rbPrint(rbNode *n);
 };
 
 

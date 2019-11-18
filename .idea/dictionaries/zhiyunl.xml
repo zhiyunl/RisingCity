@@ -2,12 +2,16 @@
   <dictionary name="zhiyunl">
     <words>
       <w>fname</w>
+      <w>icase</w>
       <w>keytype</w>
+      <w>minheap</w>
       <w>myheap</w>
       <w>nodetype</w>
+      <w>nptr</w>
       <w>printrange</w>
       <w>rbtree</w>
       <w>risingcity</w>
+      <w>rmcase</w>
       <w>zhiyunl</w>
     </words>
   </dictionary>
