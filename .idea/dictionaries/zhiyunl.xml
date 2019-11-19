@@ -1,11 +1,13 @@
 <component name="ProjectDictionaryState">
   <dictionary name="zhiyunl">
     <words>
+      <w>fileparser</w>
       <w>fname</w>
       <w>icase</w>
       <w>keytype</w>
       <w>minheap</w>
       <w>myheap</w>
+      <w>myqueue</w>
       <w>nodetype</w>
       <w>nptr</w>
       <w>printrange</w>
