@@ -8,20 +8,20 @@
 typedef int ELEMENTTYPE;
 #define MAX_Q_SIZE 1024
 struct qNode {
-    ELEMENTTYPE key;
-    ELEMENTTYPE *left;// record head
-    ELEMENTTYPE *right;// record tail
+    ELEMENTTYPE key[MAX_Q_SIZE];
+    ELEMENTTYPE head;// record head
+    ELEMENTTYPE tail;// record tail
 };
 
 class MyQueue {
 public:
-    qNode *queue;
+    qNode queue;
 
-    struct qNode **createQ(qNode *head, qNode *tail);
+    qNode *createQ();
 
-    void enQ(qNode **queue, qNode *rear, qNode *new_node);
+    ELEMENTTYPE deQ();
 
-    struct node *deQ(struct node **queue, qNode *head);
+    void enQ(ELEMENTTYPE key);
 };
 
 

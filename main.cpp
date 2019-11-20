@@ -15,6 +15,14 @@
 
 using namespace std;
 
+int queueTest() {
+    MyQueue q{};
+    q.createQ();
+    for (int i = 0; i < 20; i++) q.enQ(i);
+    cout << q.deQ() << endl;
+    q.enQ(1);
+    return 1;
+}
 
 int minHeapTest(KEYTYPE *arr) {
     cout << "\n-------------Start Min Heap Test----------" << endl;
@@ -53,10 +61,11 @@ int main(int argc, char const *argv[]) {
     KEYTYPE arr[2001] = {0, 2, 3, 4, 5, 6, 7, 8, 9};
     KEYTYPE rb[10] = {5, 3, 4, 2, 8};
     string filename = argv[1];
-    cout << argv[1] << endl;
+    cout << "Input File name is: " << argv[1] << endl;
     FileParser parser;
-    parser.readFile(filename);
-    minHeapTest(arr);
-    RBTreeTest(rb);
+//    parser.readFile(filename);
+//    minHeapTest(arr);
+//    RBTreeTest(rb);
+    queueTest();
     return 0;
 }
