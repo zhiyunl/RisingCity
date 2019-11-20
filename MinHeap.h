@@ -14,6 +14,7 @@
 class MinHeap {
 
 public:
+    bool debug;
     int len;
     int *heap;
 

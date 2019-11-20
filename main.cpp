@@ -15,6 +15,10 @@
 
 using namespace std;
 
+// TODO combine rbNode and mhNode, using one space, manage pointers in rbtree and minheap
+// {color, key, }
+
+
 int queueTest() {
     MyQueue q{};
     q.createQ();
@@ -27,16 +31,12 @@ int queueTest() {
 int minHeapTest(KEYTYPE *arr) {
     cout << "\n-------------Start Min Heap Test----------" << endl;
     MinHeap myheap{};
+    myheap.debug = true;
     myheap.init(arr); // in-place modify
-//    myheap.printHeap();
     myheap.insert(10);
-//    myheap.printHeap();
     myheap.insert(11);
-//    myheap.printHeap();
     myheap.insert(1);
-//    myheap.printHeap();
     myheap.insert(4);
-//    myheap.printHeap();
     cout << "min is removed!:" << myheap.removeMin() << endl;
     myheap.printHeap();
     return 1;
@@ -47,6 +47,10 @@ int RBTreeTest(KEYTYPE *rb) {
     cout << "\n-------------Start Red Black Tree Test----------" << endl;
     RBTree rbt{};
     rbt.rbInit(rb);
+    cout << "" << endl;
+    auto *p = new rbNode{2};
+    rbt.rbInsert(rbt.root, p);
+//    rbt.rbTraverse(rbt.root,rbt.print);
     return 1;
 }
 
@@ -61,11 +65,10 @@ int main(int argc, char const *argv[]) {
     KEYTYPE arr[2001] = {0, 2, 3, 4, 5, 6, 7, 8, 9};
     KEYTYPE rb[10] = {5, 3, 4, 2, 8};
     string filename = argv[1];
-    cout << "Input File name is: " << argv[1] << endl;
     FileParser parser;
-//    parser.readFile(filename);
-//    minHeapTest(arr);
-//    RBTreeTest(rb);
+    parser.readFile(filename);
+    minHeapTest(arr);
+    RBTreeTest(rb);
     queueTest();
     return 0;
 }

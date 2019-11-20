@@ -20,6 +20,7 @@ int MinHeap::init(int *arr) {
     heap = arr;
     while (arr[++i] != 0);
     len = i - 1;// len point to last node.
+    if (this->debug) printHeap();
     return 0;
 }
 
@@ -36,6 +37,7 @@ int MinHeap::insert(int key) {
 //    }
     heap[++len] = key;
     heapify(len);
+    if (this->debug) printHeap();
     return 0;
 }
 
@@ -56,6 +58,7 @@ int MinHeap::heapify(int index) {
         p_x /= 2;
         index /= 2;
     }
+    if (this->debug) printHeap();
     return 0;
 }
 
@@ -76,6 +79,7 @@ int MinHeap::heapify() {
             break;
         } else heap[index / 2] = heap[index];
     }
+    if (this->debug) printHeap();
     return 0;
 }
 
@@ -88,6 +92,7 @@ int MinHeap::removeMin() {
     heap[len] = 0;
     heapify();// percolation down
     len--;
+    if (this->debug) printHeap();
     return min;
 }
 

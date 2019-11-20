@@ -5,6 +5,7 @@
 #ifndef RISINGCITY_RBTREE_H
 #define RISINGCITY_RBTREE_H
 
+#include <iostream>
 #include "BSTree.h"
 
 typedef int KEYTYPE;
@@ -105,6 +106,8 @@ public:
     void rbTraverseBFS(rbNode *n, void (*callback)(rbNode *p));
 
     static void print(rbNode *p);
+
+    static std::string colorName(color_t color);
 };
 
 

@@ -2,6 +2,7 @@
 // Created by zhiyunl on 11/19/19.
 //
 #include "FileParser.h"
+#include <fstream>
 
 // TODO make cmdList a circular list
 struct Instruction cmdList[1000];
@@ -82,11 +83,13 @@ int FileParser::lineParser(string str) {
 
 int FileParser::readFile(const string &fname) {
     cout << "-------------Read input file-----------" << endl;
+    cout << "Input File name is: " << fname << endl;
     fstream f;
     f.open(fname, ios::in);
     string str;
     if (f.fail()) {
-        throw "Failed to open input file!!!";
+        cout << "Failed to open input file!!!" << endl;
+        throw std::exception();
     } else {
         while (f) {
             getline(f, str);

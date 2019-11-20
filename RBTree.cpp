@@ -3,8 +3,8 @@
 //
 
 #include "RBTree.h"
-#include <iostream>
 
+using namespace std;
 //-------------- read only ------------
 // TODO bool indicates found or not, in-place return last valid node
 rbNode *RBTree::rbSearch(rbNode *n, KEYTYPE key) {
@@ -73,16 +73,22 @@ rbNode *RBTree::uncle(rbNode *n) {
 }
 
 bool RBTree::notNull(rbNode *n) {
-    // handle nullptr
+    // handle nullptr and null value
     return n && n != nullptr; //n could be NULL or nullptr
 }
 
 void RBTree::print(rbNode *p) {
-    std::cout << p->key << " ";
+    // if red print color
+    // if occurrence > 1, print occur
+    // else just key
+    cout << "" << p->key;
+    if (p->color == RED) cout << "R";
+    if (p->occur > 1) cout << "" << p->occur;
+    cout << " ";
+//    printf("[key=%d,c=%s,n=%d]\t",p->key,colorName(p->color).c_str(),p->occur);
 }
 
-void RBTree::rbTraverse(rbNode *n, void (*callback)(rbNode *p) = nullptr) {
-    // see bs traverse
+void RBTree::rbTraverse(rbNode *n, void (*callback)(rbNode *p)) {
     if (n == nullptr) return;
     rbTraverse(n->l, callback);
     callback(n);
@@ -168,7 +174,7 @@ rbNode *RBTree::rbInit(KEYTYPE *arr) {
         auto *p = new rbNode{arr[i++]};
         this->root = rbInsert(this->root, p);
     }
-    rbTraversePre(this->root, RBTree::print); //&
+    rbTraverse(this->root, RBTree::print); //&
     return nullptr;
 }
 
@@ -201,6 +207,17 @@ rbNode *RBTree::insert(rbNode *n, rbNode *p) {
     }
     // p is parent of key when key is same, ( n if root)
     return n;
+}
+
+std::string RBTree::colorName(color_t color) {
+    switch (color) {
+        case RED:
+            return "R";
+        case BLACK:
+            return "B";
+        default:
+            return "NULL";
+    }
 }
 
 

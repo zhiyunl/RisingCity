@@ -5,7 +5,6 @@
 #ifndef RISINGCITY_FILEPARSER_H
 #define RISINGCITY_FILEPARSER_H
 
-#include <fstream>
 #include <iostream>
 
 using namespace std;
