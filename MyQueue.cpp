@@ -5,22 +5,21 @@
 #include <malloc.h>
 #include "MyQueue.h"
 
-// TODO a general queue
-/*UTILITY FUNCTIONS*/
-struct node **MyQueue::createQueue(int *front, int *rear) {
-    struct node **queue =
-            (struct node **) malloc(sizeof(struct node *) * MAX_Q_SIZE);
+// TODO a general qNode
 
-    *front = *rear = 0;
-    return queue;
+qNode *MyQueue::deQ(MyQueue **queue, qNode *head) {
+    (*head)++;
+    return queue[*head - 1];
 }
 
-void MyQueue::enQueue(struct node **queue, int *rear, struct node *new_node) {
+void MyQueue::enQ(qNode **queue, qNode *rear, qNode *new_node) {
     queue[*rear] = new_node;
     (*rear)++;
 }
 
-struct node *MyQueue::deQueue(struct node **queue, int *front) {
-    (*front)++;
-    return queue[*front - 1];
+struct qNode **MyQueue::createQ(qNode *head, qNode *tail) {
+    qNode **queue =
+            (struct qNode **) malloc(sizeof(struct qNode *) * MAX_Q_SIZE);
+    *head = *tail = 0;
+    return queue;
 }

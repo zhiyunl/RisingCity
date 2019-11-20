@@ -5,20 +5,23 @@
 #ifndef RISINGCITY_MYQUEUE_H
 #define RISINGCITY_MYQUEUE_H
 
+typedef int ELEMENTTYPE;
 #define MAX_Q_SIZE 1024
-struct queue {
-    int data;
-    struct node *left;
-    struct node *right;
+struct qNode {
+    ELEMENTTYPE key;
+    ELEMENTTYPE *left;// record head
+    ELEMENTTYPE *right;// record tail
 };
 
 class MyQueue {
 public:
-    struct node **createQueue(int *front, int *rear);
+    qNode *queue;
 
-    void enQueue(struct node **queue, int *rear, struct node *new_node);
+    struct qNode **createQ(qNode *head, qNode *tail);
 
-    struct node *deQueue(struct node **queue, int *front);
+    void enQ(qNode **queue, qNode *rear, qNode *new_node);
+
+    struct node *deQ(struct node **queue, qNode *head);
 };
 
 

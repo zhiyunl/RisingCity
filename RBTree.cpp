@@ -104,10 +104,10 @@ void RBTree::rbTraversePost(rbNode *n, void (*callback)(rbNode *)) {
 }
 
 void RBTree::rbTraverseBFS(rbNode *n, void (*callback)(rbNode *)) {
-    // use queue
+    // use qNode
     // use parent pointer
     int i = 0;
-    rbNode *tmp = n;
+    auto tmp = n;
     while (notNull(tmp)) {
         callback(tmp);
     }
@@ -120,11 +120,11 @@ rbNode *RBTree::lRotate(rbNode *n) {
     // n.right --> root , n --> root.left, n.right.left --> root.left.right, parent.child(l/r) --> root
     // note: n could be root ,when no parent
     if (notNull(n)) {
-        rbNode *newroot = n->r;
+        auto newroot = n->r;
         n->r = newroot->l;
         newroot->l = n;
         if (!isRoot(n)) {
-            rbNode *p = parent(n);
+            auto p = parent(n);
             if (p->l == n) p->l = newroot;
             else p->r = newroot;
         }
@@ -140,11 +140,11 @@ rbNode *RBTree::rRotate(rbNode *n) {
     // n.left --> root , n --> root.right, n.left.right --> root.right.left, parent.child(l/r) --> root
     // note: n could be root ,when no parent
     if (notNull(n)) {
-        rbNode *newroot = n->l;
+        auto newroot = n->l;
         n->l = newroot->r;
         newroot->r = n;
         if (!isRoot(n)) {
-            rbNode *p = parent(n);
+            auto p = parent(n);
             if (p->l == n) p->l = newroot;
             else p->r = newroot;
         }
@@ -189,7 +189,7 @@ rbNode *RBTree::insert(rbNode *n, rbNode *p) {
     // insert p into tree with root=n
     // find next insert place by search
     rbNode *np;
-    rbNode *same = rbSearch(n, p->key, &np);
+    auto same = rbSearch(n, p->key, &np);
     if (same == nullptr) {// no same key node
         if (np == nullptr) {
             throw "np is null";

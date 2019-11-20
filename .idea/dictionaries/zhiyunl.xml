@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="zhiyunl">
     <words>
+      <w>elementtype</w>
       <w>fileparser</w>
       <w>fname</w>
       <w>icase</w>
@@ -8,6 +9,7 @@
       <w>minheap</w>
       <w>myheap</w>
       <w>myqueue</w>
+      <w>newroot</w>
       <w>nodetype</w>
       <w>nptr</w>
       <w>printrange</w>
