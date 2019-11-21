@@ -5,14 +5,14 @@
  * @LastEditTime: 2019-11-16 18:39:16
  * @Description: 
  */
-// TODO maybe add ui for system
 
 #include <iostream>
 #include "MinHeap.h"
-#include "RBTree.h"
 #include "FileParser.h"
 #include "MyQueue.h"
+#include "RBTree.h"
 
+typedef int KEYTYPE;
 using namespace std;
 
 // TODO combine rbNode and mhNode, using one space, manage pointers in rbtree and minheap
@@ -28,7 +28,8 @@ int queueTest() {
     return 1;
 }
 
-int minHeapTest(KEYTYPE *arr) {
+int minHeapTest() {
+    KEYTYPE arr[2001] = {0, 2, 3, 4, 5, 6, 7, 8, 9};
     cout << "\n-------------Start Min Heap Test----------" << endl;
     MinHeap myheap{};
     myheap.debug = true;
@@ -43,14 +44,24 @@ int minHeapTest(KEYTYPE *arr) {
 }
 
 // TODO complete test
-int RBTreeTest(KEYTYPE *rb) {
+int RBTreeTest() {
     cout << "\n-------------Start Red Black Tree Test----------" << endl;
-    RBTree rbt{};
-    rbt.rbInit(rb);
-    cout << "" << endl;
-    auto *p = new rbNode{2};
-    rbt.rbInsert(rbt.root, p);
-//    rbt.rbTraverse(rbt.root,rbt.print);
+    KEYTYPE rb[] = {5, 1, 2, 3, 4, 6, 7, 8};
+    int ilen = sizeof(rb) / sizeof(rb[0]);
+    auto *tree = new RBTree<int>();
+    tree->debug = false;
+    for (int i = 0; i < ilen; i++) {
+        tree->rbInsert(rb[i]);
+        cout << "== insert: " << rb[i] << endl;
+        if (tree->debug) {
+            cout << "== result " << endl;
+            tree->print();
+            tree->rbTraverse();
+            cout << endl;
+        }
+    }
+    cout << "==final result== " << endl;
+    tree->print();
     return 1;
 }
 
@@ -62,13 +73,12 @@ int main(int argc, char const *argv[]) {
      * */
     // don't use 1st element to simplify calculation
     // used for in-place minHeap
-    KEYTYPE arr[2001] = {0, 2, 3, 4, 5, 6, 7, 8, 9};
-    KEYTYPE rb[10] = {5, 3, 4, 2, 8};
+
     string filename = argv[1];
     FileParser parser;
     parser.readFile(filename);
-    minHeapTest(arr);
-    RBTreeTest(rb);
-    queueTest();
+    minHeapTest();
+    RBTreeTest();
+//    queueTest();
     return 0;
 }

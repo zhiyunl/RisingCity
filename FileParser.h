@@ -10,9 +10,8 @@
 using namespace std;
 typedef int PARAMETER;
 typedef int TIME;
-enum INSTRUCTION_TYPE {
-    //0,   1,     2,       3
-            NO, INSERT, PRINT, PRINTRANGE
+enum INSTRUCTION_TYPE {//0,   1,     2,       3
+    NO, INSERT, PRINT, PRINTRANGE
 };
 struct Instruction {
     TIME time;
