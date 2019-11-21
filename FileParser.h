@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+#define MAX_I_SIZE 2000
 using namespace std;
 typedef int PARAMETER;
 typedef int TIME;
@@ -22,13 +23,20 @@ struct Instruction {
 
 class FileParser {
 public:
+    // TODO make cmdList a circular list
+    Instruction cmdList[2001];
+    bool debug;
+    int total;
+
     void printCmdList();
 
     enum INSTRUCTION_TYPE insParser(const string &ins, PARAMETER para2);
 
     int lineParser(string str);
 
-    int readFile(const string &fname);
+    bool readFile(const string &fname);
+
+    int loadCmd(int cnt);
 };
 
 

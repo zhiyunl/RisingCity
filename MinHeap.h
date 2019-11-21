@@ -31,7 +31,8 @@ public:
     int decreaseKey(int index, int d);
 
     void printHeap();
-//    int
+
+    int pow(int base, int exp);
 };
 
 

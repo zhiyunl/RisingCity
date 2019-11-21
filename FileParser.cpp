@@ -4,10 +4,8 @@
 #include "FileParser.h"
 #include <fstream>
 
-// TODO make cmdList a circular list
-struct Instruction cmdList[1000];
-
 void FileParser::printCmdList() {
+    cout << "print cmd list\n";
     int i = 0;
     while (cmdList[i].type) {
         cout << i + 1 << "th cmd is : ";
@@ -35,8 +33,6 @@ enum INSTRUCTION_TYPE FileParser::insParser(const string &ins, PARAMETER para2) 
     // return ins=="Insert"?INSERT:PRINT;
 }
 
-int cmdCnt = 0;
-
 int FileParser::lineParser(string str) {
     int i = 0;
     TIME time = 0;
@@ -45,7 +41,7 @@ int FileParser::lineParser(string str) {
     PARAMETER para1 = 0, para2 = 0;
     string ins;
     // e.g. "100: Insert(50,20)"
-    while (str[i]) { //until end
+    while (str[i] != '\r' && str[i] != '\000') { //until end
         switch (state) {
             case 0: // get time
                 if (str[i] == ':') {
@@ -73,32 +69,41 @@ int FileParser::lineParser(string str) {
                 ++i;
                 break;
             default:
-                cout << "wrong" << endl;
+//                cout << "wrong" << endl;
                 break;
         }
     }
-    cmdList[cmdCnt++] = {time, insParser(ins, para2), para1, para2};
+    cmdList[total++] = {time, insParser(ins, para2), para1, para2};
+    cout << total << endl;
     return 1;
 }
 
-int FileParser::readFile(const string &fname) {
-    cout << "-------------Read input file-----------" << endl;
-    cout << "Input File name is: " << fname << endl;
+bool FileParser::readFile(const string &fname) {
+    if (debug) {
+        cout << "-------------Read input file-----------" << endl;
+        cout << "Input File name is: " << fname << endl;
+    }
     fstream f;
     f.open(fname, ios::in);
     string str;
     if (f.fail()) {
         cout << "Failed to open input file!!!" << endl;
-        throw std::exception();
+        return false;
     } else {
         while (f) {
             getline(f, str);
             lineParser(str);
-            cout << str << endl;
+            if (debug) cout << str << endl;
+            //  last line is empty
         }
+        total--;
         f.close();
     }
-    cout << "print cmd list\n";
-    printCmdList();
-    return 1;
+    if (debug) printCmdList();
+    return true;
+}
+
+
+int FileParser::loadCmd(int cnt) {
+    return total;
 }

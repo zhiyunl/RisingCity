@@ -6,7 +6,6 @@
  * @Description: 
  */
 #include <iostream>
-#include <cmath>
 #include "MinHeap.h"
 
 /*
@@ -105,6 +104,17 @@ int MinHeap::decreaseKey(int index, int d) {
     return heap[index];
 }
 
+// Exponentiation by squaring
+int MinHeap::pow(int base, int exp) {
+    int result = 1;
+    for (;;) {
+        if (exp & 1) result *= base;
+        exp >>= 1;
+        if (!exp) break;
+        base *= base;
+    }
+    return result;
+}
 void MinHeap::printHeap() {
     int i = 1;
     int level = 1;
@@ -115,7 +125,11 @@ void MinHeap::printHeap() {
         // second row is 2 3 4>=2^2
         // third row is 4 5 6 7 8>=2^3
         // ...
-        if (i >= pow(2, level)) {
+//        if (i >= pow(2, level)) {
+//            std::cout << std::endl;
+//            level++;
+//        }
+        if (i >= this->pow(2, level)) {
             std::cout << std::endl;
             level++;
         }
@@ -123,4 +137,5 @@ void MinHeap::printHeap() {
     }
     std::cout << std::endl << "---------" << std::endl;
 }
+
 

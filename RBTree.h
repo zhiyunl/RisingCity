@@ -51,15 +51,6 @@ private:
     rbNode<KEY> *ro; // save root pointer
 
 
-//    // 前序遍历"红黑树"
-//    void preOrder(RBTNode <T> *tree) const;
-//
-//    // 中序遍历"红黑树"
-//    void inOrder(RBTNode <T> *tree) const;
-//
-//    // 后序遍历"红黑树"
-//    void postOrder(RBTNode <T> *tree) const;
-
 public:
     // constructor
     RBTree();
@@ -100,6 +91,7 @@ public:
     // top level, manage insert conditions, create node
     void rbInsert(KEY key);
 
+    rbNode<KEY> *rmNode(rbNode<KEY> *p);
     void print();
 
 private:
@@ -139,7 +131,7 @@ private:
 
     void _repairInsert_(rbNode<KEY> *&root, rbNode<KEY> *&n);
 
-//    rbNode<KEY> *rmNode(rbNode<KEY> *p); // use this.root
+//    rbNode<KEY> *rmNode(rbNode<KEY> *p);
 //
 //    void *rbRemove(rbNode<KEY> *&root, rbNode<KEY> *n);
 //

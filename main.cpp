@@ -14,7 +14,7 @@
 
 typedef int KEYTYPE;
 using namespace std;
-
+FileParser parser;
 // TODO combine rbNode and mhNode, using one space, manage pointers in rbtree and minheap
 // {color, key, }
 
@@ -65,6 +65,71 @@ int RBTreeTest() {
     return 1;
 }
 
+typedef rbNode<int> Node;
+
+Node *workPicker() {
+    // choose building from min heap and red black tree
+    Node *node = new Node(1, RED, nullptr, nullptr, nullptr, 1);
+    return node;
+}
+
+
+int workOn(Node *n) {
+    // do work here
+    // deduct at max five days, and return days
+    // modify minheap and red black tree
+    int days = 0;
+    days += 5;
+    return days;
+}
+
+enum State {
+    INIT, WORK, DONE, FAIL
+};
+
+
+void printFinish() {
+    ;
+}
+
+void printFailure() {
+    ;
+}
+
+bool timeLine() {
+    // manage using finite state machine
+    int global = 0;
+    int cnt = 0;
+    enum State state = INIT;
+    while (true) {
+        switch (state) {
+            case INIT://init state
+                cnt = parser.loadCmd(cnt);
+                if (cnt) {
+                    cout << "successfully loaded " << cnt << " instructions" << endl;
+                    state = WORK;
+                } else {
+                    cout << "No input command" << endl;
+                    state = FAIL;
+                }
+                break;
+            case WORK://spin in WORK
+                if (cnt > 0) {
+                    global += workOn(workPicker());
+                    cnt--;
+                    cout << "Worked 5 days" << endl;
+                } else state = DONE;
+                break;
+            case DONE:
+                printFinish();
+                return true;
+            case FAIL:
+                printFailure();
+                return false;
+        }
+    }
+}
+
 int main(int argc, char const *argv[]) {
     /*
      * Must take in the file_name as argument
@@ -75,10 +140,14 @@ int main(int argc, char const *argv[]) {
     // used for in-place minHeap
 
     string filename = argv[1];
-    FileParser parser;
-    parser.readFile(filename);
-    minHeapTest();
-    RBTreeTest();
+
+    if (!parser.readFile(filename)) cout << "fail" << endl;
+    else {
+//        minHeapTest();
+//        RBTreeTest();
 //    queueTest();
+        timeLine();
+    }
+
     return 0;
 }
