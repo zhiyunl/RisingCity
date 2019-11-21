@@ -3,31 +3,56 @@
 //
 
 #include "MyQueue.h"
+#include "FileParser.h"
 #include <iostream>
+#include <cstring>
 
-// TODO a general qNode
+// a general qNode API is created
+template
+class MyQueue<int>;
+
+template
+class MyQueue<Instruction>;
+
 // circular list
 // [  head=first element tail=last element+1         ]
 // len = tail-head
 // store into tail%MAX_Q_SIZE
 // fetch head
-qNode *MyQueue::createQ() {
+template<class QUEUETYPE>
+void MyQueue<QUEUETYPE>::createQ() {
     // this->queue;
-    queue.head = queue.tail = 0;
-    return &queue;
+//    head = 0;
+//    tail = 0;
+    ;
 }
 
-ELEMENTTYPE MyQueue::deQ() {
-    if (queue.head >= queue.tail) {
+template<class QUEUETYPE>
+QUEUETYPE MyQueue<QUEUETYPE>::deQ() {
+    if (head >= tail) {
         std::cout << "***no element***" << std::endl;
-        throw std::exception();
+        return QUEUETYPE{};
     }
-    return queue.key[queue.head++];
+    return queue[head++];
 }
 
-void MyQueue::enQ(ELEMENTTYPE key) {
-    if (queue.tail - queue.head < MAX_Q_SIZE) {
-        queue.key[queue.tail++ % MAX_Q_SIZE] = key;
+template<class QUEUETYPE>
+void MyQueue<QUEUETYPE>::enQ(QUEUETYPE key) {
+    if (qLen() < MAX_Q_SIZE) {
+        queue[tail++ % MAX_Q_SIZE] = key;
+//        memcpy(&key, &queue[tail++ % MAX_Q_SIZE], sizeof(key));
     }
 }
+
+template<class QUEUETYPE>
+int MyQueue<QUEUETYPE>::qLen() {
+    return tail - head;
+}
+
+//template<class QUEUETYPE>
+//MyQueue<QUEUETYPE>::MyQueue() {
+//    queue=new QUEUETYPE[MAX_Q_SIZE]{};
+//    head=0;
+//    tail=0;
+//}
 

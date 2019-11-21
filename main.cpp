@@ -20,11 +20,14 @@ FileParser parser;
 
 
 int queueTest() {
-    MyQueue q{};
+    MyQueue<int> q{};
     q.createQ();
-    for (int i = 0; i < 20; i++) q.enQ(i);
-    cout << q.deQ() << endl;
-    q.enQ(1);
+    for (int i = 0; i < 20; i++) {
+//        auto *n = new Instruction(i, INSERT, i * 10);
+        q.enQ(i);
+    }
+//    cout << q.deQ() << endl;
+//    q.enQ();
     return 1;
 }
 
@@ -67,44 +70,48 @@ int RBTreeTest() {
 
 typedef rbNode<int> Node;
 
+// TODO pick a node to work on
 Node *workPicker() {
     // choose building from min heap and red black tree
     Node *node = new Node(1, RED, nullptr, nullptr, nullptr, 1);
     return node;
 }
 
+// TODO modify nodes
+int days = 0;
 
 int workOn(Node *n) {
     // do work here
     // deduct at max five days, and return days
     // modify minheap and red black tree
-    int days = 0;
     days += 5;
     return days;
 }
 
-enum State {
-    INIT, WORK, DONE, FAIL
-};
 
+int global = 0;
 
 void printFinish() {
-    ;
+    cout << "Total Time is: " << global << endl;
 }
 
 void printFailure() {
     ;
 }
 
+enum State {
+    INIT, LOAD, WORK, DONE, FAIL
+};
+
 bool timeLine() {
     // manage using finite state machine
-    int global = 0;
+    Instruction *next{};
     int cnt = 0;
     enum State state = INIT;
     while (true) {
         switch (state) {
             case INIT://init state
-                cnt = parser.loadCmd(cnt);
+                cnt = parser.cmdTotal();
                 if (cnt) {
                     cout << "successfully loaded " << cnt << " instructions" << endl;
                     state = WORK;
@@ -113,11 +120,18 @@ bool timeLine() {
                     state = FAIL;
                 }
                 break;
-            case WORK://spin in WORK
+                //spin in load and work
+            case LOAD:
+                if (parser.hasCmd()) *next = parser.nextCmd();
+//                if()
+                state = WORK;
+                break;
+            case WORK:
                 if (cnt > 0) {
                     global += workOn(workPicker());
                     cnt--;
                     cout << "Worked 5 days" << endl;
+                    state = LOAD;
                 } else state = DONE;
                 break;
             case DONE:
@@ -138,15 +152,14 @@ int main(int argc, char const *argv[]) {
      * */
     // don't use 1st element to simplify calculation
     // used for in-place minHeap
-
     string filename = argv[1];
-
+    parser.debug = true;
     if (!parser.readFile(filename)) cout << "fail" << endl;
     else {
 //        minHeapTest();
 //        RBTreeTest();
-//    queueTest();
-        timeLine();
+        queueTest();
+//        timeLine();
     }
 
     return 0;

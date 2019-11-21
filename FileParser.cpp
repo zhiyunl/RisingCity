@@ -7,11 +7,13 @@
 void FileParser::printCmdList() {
     cout << "print cmd list\n";
     int i = 0;
-    while (cmdList[i].type) {
+    Instruction next;
+    while (hasCmd()) {
+        next = nextCmd();
         cout << i + 1 << "th cmd is : ";
-        cout << cmdList[i].time << ": " << (cmdList[i].type == INSERT ? "Insert(" : "PrintBuilding(");
-        if (cmdList[i].para2) cout << cmdList[i].para1 << "," << cmdList[i].para2 << ")" << endl;
-        else cout << cmdList[i].para1 << ")" << endl;
+        cout << next.time << ": " << (next.type == INSERT ? "Insert(" : "PrintBuilding(");
+        if (next.para2) cout << next.para1 << "," << next.para2 << ")" << endl;
+        else cout << next.para1 << ")" << endl;
         i++;
     }
 }
@@ -41,7 +43,8 @@ int FileParser::lineParser(string str) {
     PARAMETER para1 = 0, para2 = 0;
     string ins;
     // e.g. "100: Insert(50,20)"
-    while (str[i] != '\r' && str[i] != '\000') { //until end
+    // could be LF or CR or CRLF, wierd \000
+    while (str[i] != '\r' && str[i] != '\n' && str[i] != '\000') { //until end
         switch (state) {
             case 0: // get time
                 if (str[i] == ':') {
@@ -73,8 +76,9 @@ int FileParser::lineParser(string str) {
                 break;
         }
     }
-    cmdList[total++] = {time, insParser(ins, para2), para1, para2};
-    cout << total << endl;
+//    str[i] != '\r' && str[i] != '\n' && str[i] != '\000'
+    cmdQueue->enQ(Instruction{time, insParser(ins, para2), para1, para2});
+    cout << cmdQueue->qLen() << endl;
     return 1;
 }
 
@@ -90,20 +94,32 @@ bool FileParser::readFile(const string &fname) {
         cout << "Failed to open input file!!!" << endl;
         return false;
     } else {
-        while (f) {
-            getline(f, str);
+        while (getline(f, str)) {
             lineParser(str);
             if (debug) cout << str << endl;
-            //  last line is empty
         }
-        total--;
         f.close();
     }
+    cout << cmdQueue->qLen() << endl;
     if (debug) printCmdList();
     return true;
 }
 
 
-int FileParser::loadCmd(int cnt) {
-    return total;
+Instruction FileParser::nextCmd() {
+    return cmdQueue->deQ();
+}
+
+bool FileParser::hasCmd() {
+    return cmdQueue->qLen() != 0;
+}
+
+FileParser::FileParser() {
+    auto q = new MyQueue<Instruction>();
+    cmdQueue = q;
+    debug = false;
+}
+
+int FileParser::cmdTotal() {
+    return cmdQueue->qLen();
 }

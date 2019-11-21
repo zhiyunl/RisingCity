@@ -5,23 +5,25 @@
 #ifndef RISINGCITY_MYQUEUE_H
 #define RISINGCITY_MYQUEUE_H
 
-typedef int ELEMENTTYPE;
-#define MAX_Q_SIZE 1024
-struct qNode {
-    ELEMENTTYPE key[MAX_Q_SIZE];
-    ELEMENTTYPE head;// record head
-    ELEMENTTYPE tail;// record tail
-};
+//typedef int QUEUETYPE;
+#define MAX_Q_SIZE 2000
 
+template<class QUEUETYPE>
 class MyQueue {
 public:
-    qNode queue;
+    QUEUETYPE queue[MAX_Q_SIZE];
+//    MyQueue();
+    int head;// record head
 
-    qNode *createQ();
+    int tail;// record tail
 
-    ELEMENTTYPE deQ();
+    void createQ();
 
-    void enQ(ELEMENTTYPE key);
+    QUEUETYPE deQ();
+
+    void enQ(QUEUETYPE key);
+
+    int qLen();
 };
 
 
