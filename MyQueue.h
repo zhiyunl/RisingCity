@@ -19,7 +19,7 @@ public:
 
     void createQ();
 
-    QUEUETYPE deQ();
+    QUEUETYPE *deQ();
 
     void enQ(QUEUETYPE key);
 

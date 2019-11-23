@@ -28,12 +28,11 @@ void MyQueue<QUEUETYPE>::createQ() {
 }
 
 template<class QUEUETYPE>
-QUEUETYPE MyQueue<QUEUETYPE>::deQ() {
+QUEUETYPE *MyQueue<QUEUETYPE>::deQ() {
     if (head >= tail) {
         std::cout << "***no element***" << std::endl;
-        return QUEUETYPE{};
-    }
-    return queue[head++];
+        return nullptr;
+    } else return &queue[head++];
 }
 
 template<class QUEUETYPE>

@@ -6,14 +6,16 @@
 #define RISINGCITY_RBTREE_H
 
 #include <iostream>
-//#include "BSTree.h"
+#include "FileParser.h"
+//#include "MinHeap.h"
 
-//typedef int KEY;
+typedef struct mhNode *RBKEY;
+
 enum color_t {
     BLACK, RED
 };
 enum lr_t {
-    LEFT, RIGHT
+    ROOT, LEFT, RIGHT
 };
 enum icase_t {
     i1, i2, i3, i4, i5
@@ -22,17 +24,19 @@ enum rmcase_t {
     rm1, rm2, rm3, rm4, rm5, rm6
 };
 
-template<class KEY>
+
 struct rbNode {
     rbNode *pa; // parent
     rbNode *l; // left child
     rbNode *r; // right child
     color_t color;
-    KEY key;
-    int occur; //add count to deal with multiple same key nodes
+    RBKEY key;
+//    int occur; //add count to deal with multiple same key nodes
 
-    rbNode(KEY val, color_t c, rbNode *p, rbNode *l, rbNode *r, int occur) :
-            key(val), color(c), pa(), l(l), r(r), occur() {}
+    rbNode(RBKEY val, color_t c, rbNode *p, rbNode *l, rbNode *r) :
+            key(val), color(c), pa(), l(l), r(r) {}
+
+    rbNode() = default;
 
 };
 
@@ -42,14 +46,12 @@ struct rbNode {
 // use one sentinel node to represent all NIL across the whole tree
 // source:https://en.wikipedia.org/wiki/Sentinel_node#Second_version_using_a_sentinel_node
 // ---------------
-template<class KEY>
+
 class RBTree {
 public:
     bool debug; // true to print tree
 
-private:
-    rbNode<KEY> *ro; // save root pointer
-
+    rbNode *ro; // save root pointer
 
 public:
     // constructor
@@ -70,103 +72,99 @@ public:
 //    void rbTraverseBFS();
 
     // init a red-black tree using array
-    void rbInit(KEY *arr); //use
+    void rbInit(RBKEY *arr); //use
     // get grandparent
-    rbNode<KEY> *grandP(rbNode<KEY> *n);
+    rbNode *grandP(rbNode *n);
 
     //get parent
-    rbNode<KEY> *parent(rbNode<KEY> *n);
+    rbNode *parent(rbNode *n);
 
     // get sibling
-    rbNode<KEY> *sibling(rbNode<KEY> *n);
+    rbNode *sibling(rbNode *n);
 
     // get uncle
-    rbNode<KEY> *uncle(rbNode<KEY> *n);
+    rbNode *uncle(rbNode *n);
 
     //
-    rbNode<KEY> *rbSearch(KEY key);
+    rbNode *rbSearch(RBKEY key, int mode);
 
-    rbNode<KEY> *rbSearchIter(KEY key);
+//    rbNode  *rbSearchIter(RBKEY key);
 
     // top level, manage insert conditions, create node
-    void rbInsert(KEY key);
+    void rbInsert(RBKEY key);
 
-    rbNode<KEY> *rmNode(rbNode<KEY> *p);
+    rbNode *rbRemove(RBKEY key);
+
     void print();
+
+    rbNode *priorNode(rbNode *tree);
+
+    rbNode *postNode(rbNode *tree);
 
 private:
     // print
-    void _print_(rbNode<KEY> *node) const;
+    void _print_(rbNode *node) const;
 
     // in order
-    void _rbTraverse_(rbNode<KEY> *tree) const;
+    void _rbTraverse_(rbNode *tree) const;
 
     // pre order
-    void _rbTraversePre_(rbNode<KEY> *tree) const;
+    void _rbTraversePre_(rbNode *tree) const;
 
     // post order
-    void _rbTraversePost_(rbNode<KEY> *tree) const;
+    void _rbTraversePost_(rbNode *tree) const;
     // bfs
-//    void rbTraverseBFS(rbNode<KEY> *tree) const;
+//    void rbTraverseBFS(rbNode  *tree) const;
 
-    rbNode<KEY> *_rbSearch_(rbNode<KEY> *tree, KEY key) const;
+    rbNode *_rbSearch_(rbNode *tree, RBKEY key) const;
 
-    rbNode<KEY> *_rbSearchIter_(rbNode<KEY> *tree, KEY key) const;
+    rbNode *_rbSearchIter_(rbNode *tree, RBKEY key) const;
 
-    rbNode<KEY> *_maxNode_(rbNode<KEY> *tree);
+    rbNode *_maxNode_(rbNode *tree);
 
-    rbNode<KEY> *_minNode_(rbNode<KEY> *tree);
+    rbNode *_minNode_(rbNode *tree);
 
-    rbNode<KEY> *_priorNode_(rbNode<KEY> *tree);
+    rbNode *_priorNode_(rbNode *tree);
 
-    rbNode<KEY> *_postNode_(rbNode<KEY> *tree);
+    rbNode *_postNode_(rbNode *tree);
 
-    void lRotate(rbNode<KEY> *&root, rbNode<KEY> *n);
+    void lRotate(rbNode *&root, rbNode *n);
 
-    void rRotate(rbNode<KEY> *&root, rbNode<KEY> *n);
-
+    void rRotate(rbNode *&root, rbNode *n);
 
     // lower level, just insert
-    void _insert_(rbNode<KEY> *&root, rbNode<KEY> *&n);
+    void _insert_(rbNode *&root, rbNode *&n);
 
-    void _repairInsert_(rbNode<KEY> *&root, rbNode<KEY> *&n);
+    void _repairInsert_(rbNode *&root, rbNode *&n);
 
-//    rbNode<KEY> *rmNode(rbNode<KEY> *p);
-//
-//    void *rbRemove(rbNode<KEY> *&root, rbNode<KEY> *n);
-//
-//    void *repairRemove(rbNode<KEY> *&root, rbNode<KEY> *n);
+    rbNode *_remove_(rbNode *&root, rbNode *n);
 
-//    <KEY> *rmCase(rbNode *n, rmcase_t c);
-//
-//    rbNode<KEY> *rmNode2(rbNode *n, rbNode *rm);
-//
-//    rbNode *replace(rbNode *n, rbNode *child);
-//
-//    rbNode *rmNode1(rbNode *n);
-//
-//    rbNode *rmNode0(rbNode *n);
-    void print(rbNode<KEY> *tree, KEY key, int direction);
+    void _repairRemove_(rbNode *&root, rbNode *n, rbNode *p);
+
+    rbNode *rmCase(rbNode *n, rmcase_t c);
+
+    rbNode *replace(rbNode *n, rbNode *child);
+
+    void print(rbNode *tree, RBKEY key, lr_t dir);
 
 
 //    static std::string _colorName_(color_t color);
 
-    void inCase1(rbNode<KEY> *&root, rbNode<KEY> *&n);
+    void inCase1(rbNode *&root, rbNode *&n);
 
-    void inCase2(rbNode<KEY> *&root, rbNode<KEY> *&n);
+    void inCase2(rbNode *&root, rbNode *&n);
 
-    void inCase3(rbNode<KEY> *&root, rbNode<KEY> *&n);
+    void inCase3(rbNode *&root, rbNode *&n);
 
-    void inCase4(rbNode<KEY> *&root, rbNode<KEY> *&n);
+    void inCase4(rbNode *&root, rbNode *&n);
 
-//    rbNode *findRoot(rbNode *n);
-#define rb_parent(r)   ((r)->parent)
+//    rbNode *findRoot(rbNode *n)
 #define rb_color(r) ((r)->color)
 #define rb_is_red(r)   ((r)->color==RED)
 #define rb_is_black(r)  ((r)->color==BLACK)
 #define rb_set_black(r)  do { (r)->color = BLACK; } while (0)
 #define rb_set_red(r)  do { (r)->color = RED; } while (0)
-#define rb_set_parent(r, p)  do { (r)->parent = (p); } while (0)
+#define rb_set_parent(r, p)  do { (r)->pa = (p); } while (0)
 #define rb_set_color(r, c)  do { (r)->color = (c); } while (0)
 };
 

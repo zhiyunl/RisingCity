@@ -7,13 +7,13 @@
 void FileParser::printCmdList() {
     cout << "print cmd list\n";
     int i = 0;
-    Instruction next;
+    Instruction *next;
     while (hasCmd()) {
         next = nextCmd();
         cout << i + 1 << "th cmd is : ";
-        cout << next.time << ": " << (next.type == INSERT ? "Insert(" : "PrintBuilding(");
-        if (next.para2) cout << next.para1 << "," << next.para2 << ")" << endl;
-        else cout << next.para1 << ")" << endl;
+        cout << next->time << ": " << (next->type == INSERT ? "Insert(" : "PrintBuilding(");
+        if (next->para2) cout << next->para1 << "," << next->para2 << ")" << endl;
+        else cout << next->para1 << ")" << endl;
         i++;
     }
 }
@@ -100,13 +100,15 @@ bool FileParser::readFile(const string &fname) {
         }
         f.close();
     }
-    cout << cmdQueue->qLen() << endl;
-    if (debug) printCmdList();
+    if (debug) {
+        cout << "current cmd num is: " << cmdQueue->qLen() << endl;
+        //printCmdList();
+    }
     return true;
 }
 
 
-Instruction FileParser::nextCmd() {
+Instruction *FileParser::nextCmd() {
     return cmdQueue->deQ();
 }
 
@@ -115,8 +117,7 @@ bool FileParser::hasCmd() {
 }
 
 FileParser::FileParser() {
-    auto q = new MyQueue<Instruction>();
-    cmdQueue = q;
+    cmdQueue = new MyQueue<Instruction>();
     debug = false;
 }
 

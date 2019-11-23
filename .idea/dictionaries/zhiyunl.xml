@@ -6,6 +6,7 @@
       <w>fname</w>
       <w>icase</w>
       <w>keytype</w>
+      <w>memcpy</w>
       <w>minheap</w>
       <w>myheap</w>
       <w>myqueue</w>
@@ -14,6 +15,7 @@
       <w>nptr</w>
       <w>printrange</w>
       <w>queuetype</w>
+      <w>rbkey</w>
       <w>rbtree</w>
       <w>risingcity</w>
       <w>rmcase</w>

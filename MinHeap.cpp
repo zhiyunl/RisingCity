@@ -8,101 +8,166 @@
 #include <iostream>
 #include "MinHeap.h"
 
+
 /*
  * use array to represent min heap
  * */
-int MinHeap::init(int *arr) {
+int MinHeap::init(mhNode *arr) {
     /*
      * since min binary heap is a complete binary tree,
      * so we just use sequential order for its storage*/
-    int i = 0;
-    heap = arr;
-    while (arr[++i] != 0);
-    len = i - 1;// len point to last node.
-    if (this->debug) printHeap();
+    while (arr[len].bNum != 0) {
+        // heap start from 1 not 0;
+        //heap[len+1] = arr[len];
+        insert(arr[len]);
+//        len++; // handled in insert
+    }
+// last element
+//    if (debug) printHeap();
     return 0;
 }
 
-int MinHeap::insert(int key) {
+mhNode *MinHeap::insert(mhNode n) {
     /*
      * insert next to last node, heapify by compare it with parents,
      * swap if needed,
      * recursively*/
     // get where is last node
-//    len=sizeof(heap)/sizeof(heap[0]); // not working for pointer
-//    len=0;
-//    for (int i = 0; heap[i] ; ++i) {
-//        len=i+1;
-//    }
-    heap[++len] = key;
-    heapify(len);
-    if (this->debug) printHeap();
-    return 0;
+    if (debug) cout << "--insert----" << endl;
+    mhNode *p;
+    heap[++len] = n;
+    if (debug) {
+        cout << "before heapify:" << endl;
+        printHeap();
+    }
+    p = heapifyUp();
+//    cout << p << endl;
+    return p;
 }
 
-int MinHeap::heapify(int index) {
+mhNode *MinHeap::heapifyUp() {
     /* also called Percolation Up
      * compare parent and x, if parent is smaller, done
      * else, swap p_x and x
      * continuously until reach root or first node that satisfy 1st condition*/
-    int p_x;
-    p_x = index / 2;
-    while (heap[p_x] > heap[index]) {
-        // swap
-        int tmp;
-        tmp = heap[p_x];
-        heap[p_x] = heap[index];
-        heap[index] = tmp;
-        // update parent and x
-        p_x /= 2;
-        index /= 2;
+    int index = len;
+    int p_x = index / 2;
+    mhNode base = heap[len];
+    while (true) {
+        if (p_x > 0) {
+            if (base.et > heap[p_x].et) {
+                // at least child of root, stop when insert node > parent
+                heap[index] = base;
+//                index=p_x; // for return
+                break;
+            } else {
+                heap[index] = heap[p_x];
+            }
+            index = p_x;
+            p_x /= 2;
+        } else {
+            heap[index] = base;
+            break;
+        }
     }
-    if (this->debug) printHeap();
-    return 0;
+    // by the time it breaks, index is the new insert final pos
+    if (debug) {
+        cout << "after hepifyup:" << endl;
+        printHeap();
+    }
+    return &heap[index];// return pointer to this node
 }
 
-int MinHeap::heapify() {
+mhNode *MinHeap::heapifyDn() {
     /* also called Percolation Down
      * get min of left child and right child,
      * if parent is smaller than min, done
      * else, swap parent and min node
      * continuously until reach leaf or first node that satisfy condition*/
-    int index = 1;
-    int base = heap[1];
+    int index = len;
+    int x_child = index * 2;
+    mhNode base = heap[1];// start from root
     while (true) {
-        index *= 2;
-        index += (heap[index] < heap[index + 1]) ? 0 : 1; // choose left or right child
-        if (heap[index] == 0 || base < heap[index]) {
-            // stop when reach leaf or insert node > children
-            heap[index / 2] = base;
+        if (x_child <= len) {
+            // right child could be zero,
+            if (heap[x_child + 1].bNum != 0)
+                x_child += (heap[x_child].et < heap[x_child + 1].et) ? 0 : 1; // choose left or right child
+            if (heap[x_child].bNum == 0 || base.et < heap[x_child].et) {
+                // stop when reach leaf or insert node < children
+                heap[index] = base;
+                break;
+            } else heap[index] = heap[x_child];
+            index = x_child;
+            x_child *= 2;
+        } else {
+            heap[index] = base;
             break;
-        } else heap[index / 2] = heap[index];
+        }
     }
-    if (this->debug) printHeap();
-    return 0;
+    if (debug) {
+        cout << "after heapify down:" << endl;
+        printHeap();
+    }
+    return &heap[index / 2];// last new node pos
 }
 
-int MinHeap::removeMin() {
+//mhNode MinHeap::removeMin(RBTree * &n) {
+//    /*
+//     * remove root node,
+//     * percolation down using last node*/
+//    if (debug) {
+//        cout << "----remove min----" << endl;
+//        printHeap();
+//    }
+//    mhNode min = heap[1];
+//    heap[1] = heap[len];// replace with last value
+//    // delete last node
+//    heap[len].bNum = 0;
+//    heap[len].et = 0;
+//    heap[len].tt = 0;
+//    len--;
+//    if (debug) {
+//        cout << "before heapify" << endl;
+//        printHeap();
+//    }
+//    // handle new pointer for rbtree
+////    n->ro->key =
+//            heapifyDn();// percolation down
+//    return min;
+//}
+
+void MinHeap::removeMin() {
     /*
      * remove root node,
      * percolation down using last node*/
-    int min = heap[1];
-    heap[1] = heap[len];
-    heap[len] = 0;
-    heapify();// percolation down
+    if (debug) {
+        cout << "----remove min----" << endl;
+        printHeap();
+    }
+//    mhNode min = heap[1];
+    if (len > 1) heap[1] = heap[len];// replace with last value
+    // delete last node
+    heap[len].bNum = 0;
+    heap[len].et = 0;
+    heap[len].tt = 0;
     len--;
-    if (this->debug) printHeap();
-    return min;
+    if (len == 0) return;
+    if (debug) {
+        cout << "before heapify" << endl;
+        printHeap();
+    }
+    // handle new pointer for rbtree
+    heapifyDn();// percolation down
+//    return min;
 }
-
-int MinHeap::decreaseKey(int index, int d) {
-    heap[index] -= d;
-    // TODO finish decrease Key
-//   need to check if child is smaller than parent
-//   if so, need a percolation up
-
-    return heap[index];
-}
+//int MinHeap::decreaseKey(int index, int d) {
+//    heap[index] -= d;
+//    // TODO finish decrease Key
+////   need to check if child is smaller than parent
+////   if so, need a percolation up
+//
+//    return heap[index];
+//}
 
 // Exponentiation by squaring
 int MinHeap::pow(int base, int exp) {
@@ -115,27 +180,51 @@ int MinHeap::pow(int base, int exp) {
     }
     return result;
 }
+
+void MinHeap::mhRrintNode(int index) {
+    std::cout << " [" << heap[index].bNum << "," << heap[index].et << "," << heap[index].tt << "] ";
+}
+
 void MinHeap::printHeap() {
     int i = 1;
     int level = 1;
     // first element is not used!
-    std::cout << std::endl << "---------" << std::endl;
-    while (heap[i]) { //complete binary tree
+    std::cout << "\n---------" << std::endl;
+    while (heap[i].bNum) { //complete binary tree
         // first row is 1 2>=2^1
         // second row is 2 3 4>=2^2
         // third row is 4 5 6 7 8>=2^3
         // ...
-//        if (i >= pow(2, level)) {
-//            std::cout << std::endl;
-//            level++;
-//        }
-        if (i >= this->pow(2, level)) {
+        if (i >= pow(2, level)) {
             std::cout << std::endl;
             level++;
         }
-        std::cout << heap[i++] << "\t";
+        mhRrintNode(i++);
     }
-    std::cout << std::endl << "---------" << std::endl;
+    std::cout << "\n---------" << std::endl;
+}
+
+void MinHeap::switchRoot(mhNode *p) {
+    // find smallest building num child that have same et with root
+    // bfs traversal, just one by one
+    // TODO change to not O(n)
+    mhNode *min = &heap[1];
+    if (heap[2].bNum == 0) return;
+    for (int i = 2; i < len + 1; i++) {
+        if (heap[1].et == heap[i].et && min->bNum > heap[i].bNum) {
+            min = &heap[i];
+        }
+    }
+    mhNode q = *min;
+    *min = heap[1];
+    heap[1] = q;
 }
 
 
+
+
+//mhNode::mhNode(int i, int i1, int i2) {
+//    bNum=i;
+//    et=i1;
+//    tt=i2;
+//}

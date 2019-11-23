@@ -31,7 +31,6 @@ struct Instruction {
 
 class FileParser {
 public:
-    // TODO make cmdQueue a circular list
     MyQueue<Instruction> *cmdQueue;
     bool debug;
 
@@ -44,7 +43,7 @@ public:
 
     bool readFile(const string &fname);
 
-    Instruction nextCmd();
+    Instruction *nextCmd();
 
     bool hasCmd();
 
