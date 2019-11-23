@@ -12,7 +12,7 @@ using namespace std;
 // otherwise, there will be error
 
 
-RBTree::RBTree() : ro(NULL) {
+RBTree::RBTree() {
     ro = nullptr;
     debug = false;
 }
@@ -267,6 +267,7 @@ void RBTree::rRotate(rbNode *&root, rbNode *n) {
 void RBTree::rbInsert(RBKEY key) {
     // possibly this could fail!
     auto n = new rbNode(key, BLACK, nullptr, nullptr, nullptr);
+    key->rbn = n;
     _insert_(this->ro, n);
     // without repair, it's correct
     _repairInsert_(this->ro, n);
@@ -329,7 +330,7 @@ void RBTree::print(rbNode *tree, RBKEY key, lr_t dir) {
             std::cout << tree->key->bNum << "(B) is root" << std::endl;
         else {               // subtree
             std::cout << tree->key->bNum << (tree->color == RED ? "(R)" : "(B)") \
- << " is " << key << "'s " << \
+ << " is " << key->bNum << "'s " << \
              (dir == RIGHT ? "right" : "left") << std::endl;
         }
         print(tree->l, tree->key, LEFT); //left
@@ -566,18 +567,9 @@ rbNode *RBTree::_remove_(rbNode *&root, rbNode *n) {
 }
 
 
-rbNode *RBTree::rmCase(rbNode *n, rmcase_t c) {
-    return nullptr;
-}
-
-
-rbNode *RBTree::replace(rbNode *n, rbNode *child) {
-    return nullptr;
-}
-
-
 rbNode *RBTree::rbRemove(RBKEY key) {
-    rbNode *node = rbSearch(key, 0);
+//    rbNode *node = rbSearch(key, 0);
+    rbNode *node = key->rbn;
     if (node != nullptr)
         return _remove_(ro, node);
     else return nullptr;

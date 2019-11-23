@@ -5,13 +5,14 @@
 #ifndef RISINGCITY_FILEPARSER_H
 #define RISINGCITY_FILEPARSER_H
 
-#include <iostream>
-#include "MyQueue.h"
 
-//#define MAX_I_SIZE 2000
+#include "MyQueue.h"
+#include <iostream>
+
 using namespace std;
 typedef int PARAMETER;
 typedef int TIME;
+
 enum INSTRUCTION_TYPE {//0,   1,     2,       3
     NO, INSERT, PRINT, PRINTRANGE
 };

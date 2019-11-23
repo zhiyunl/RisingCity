@@ -8,6 +8,7 @@
 #include <iostream>
 #include "MinHeap.h"
 
+using namespace std;
 
 /*
  * use array to represent min heap
@@ -35,14 +36,16 @@ mhNode *MinHeap::insert(mhNode n) {
     // get where is last node
     if (debug) cout << "--insert----" << endl;
     mhNode *p;
+    //TODO modify heap - rbtree pointer outside
     heap[++len] = n;
     if (debug) {
         cout << "before heapify:" << endl;
         printHeap();
     }
-    p = heapifyUp();
+    // TODO do heapify outside
+//    p = heapifyUp();
 //    cout << p << endl;
-    return p;
+    return &heap[len];
 }
 
 mhNode *MinHeap::heapifyUp() {
@@ -57,19 +60,24 @@ mhNode *MinHeap::heapifyUp() {
         if (p_x > 0) {
             if (base.et > heap[p_x].et) {
                 // at least child of root, stop when insert node > parent
+                base.rbn->key = &heap[index];
                 heap[index] = base;
 //                index=p_x; // for return
                 break;
-            } else {
+            } else { // pull parent node down
+                heap[p_x].rbn->key = &heap[index];
                 heap[index] = heap[p_x];
             }
             index = p_x;
             p_x /= 2;
         } else {
+            //TODO before do this, modify corresponding rbNode pointer
+            base.rbn->key = &heap[index];
             heap[index] = base;
             break;
         }
     }
+
     // by the time it breaks, index is the new insert final pos
     if (debug) {
         cout << "after hepifyup:" << endl;
@@ -84,7 +92,7 @@ mhNode *MinHeap::heapifyDn() {
      * if parent is smaller than min, done
      * else, swap parent and min node
      * continuously until reach leaf or first node that satisfy condition*/
-    int index = len;
+    int index = 1;
     int x_child = index * 2;
     mhNode base = heap[1];// start from root
     while (true) {
@@ -94,12 +102,17 @@ mhNode *MinHeap::heapifyDn() {
                 x_child += (heap[x_child].et < heap[x_child + 1].et) ? 0 : 1; // choose left or right child
             if (heap[x_child].bNum == 0 || base.et < heap[x_child].et) {
                 // stop when reach leaf or insert node < children
+                base.rbn->key = &heap[index];
                 heap[index] = base;
                 break;
-            } else heap[index] = heap[x_child];
+            } else {
+                heap[x_child].rbn->key = &heap[index];
+                heap[index] = heap[x_child];
+            }
             index = x_child;
             x_child *= 2;
         } else {
+            base.rbn->key = &heap[index];
             heap[index] = base;
             break;
         }
@@ -145,11 +158,15 @@ void MinHeap::removeMin() {
         printHeap();
     }
 //    mhNode min = heap[1];
-    if (len > 1) heap[1] = heap[len];// replace with last value
+    if (len > 1) {
+        heap[1] = heap[len];// replace with last key
+        heap[1].rbn->key = &heap[1]; // update pointer
+    }
     // delete last node
     heap[len].bNum = 0;
     heap[len].et = 0;
     heap[len].tt = 0;
+    heap[len].rbn = nullptr; // clear mh - rb
     len--;
     if (len == 0) return;
     if (debug) {
@@ -157,6 +174,7 @@ void MinHeap::removeMin() {
         printHeap();
     }
     // handle new pointer for rbtree
+    // TODO, do outside
     heapifyDn();// percolation down
 //    return min;
 }
@@ -218,6 +236,10 @@ void MinHeap::switchRoot(mhNode *p) {
     mhNode q = *min;
     *min = heap[1];
     heap[1] = q;
+    // every node pointer to correct rbn
+    // maintain rbn - heap
+    min->rbn->key = min;
+    heap[1].rbn->key = &heap[1];
 }
 
 

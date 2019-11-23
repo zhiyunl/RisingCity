@@ -19,6 +19,7 @@ struct mhNode {
     int tt;
     int et;
     int bNum; // the only key to check a node
+    rbNode *rbn; //add the back pointer
 };
 
 class MinHeap {

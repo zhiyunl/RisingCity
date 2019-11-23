@@ -4,6 +4,7 @@
 #include "FileParser.h"
 #include <fstream>
 
+
 void FileParser::printCmdList() {
     cout << "print cmd list\n";
     int i = 0;
@@ -78,7 +79,7 @@ int FileParser::lineParser(string str) {
     }
 //    str[i] != '\r' && str[i] != '\n' && str[i] != '\000'
     cmdQueue->enQ(Instruction{time, insParser(ins, para2), para1, para2});
-    cout << cmdQueue->qLen() << endl;
+    if (debug) cout << cmdQueue->qLen() << endl;
     return 1;
 }
 

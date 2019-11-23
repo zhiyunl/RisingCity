@@ -5,10 +5,6 @@
 #ifndef RISINGCITY_RBTREE_H
 #define RISINGCITY_RBTREE_H
 
-#include <iostream>
-#include "FileParser.h"
-//#include "MinHeap.h"
-
 typedef struct mhNode *RBKEY;
 
 enum color_t {
@@ -16,12 +12,6 @@ enum color_t {
 };
 enum lr_t {
     ROOT, LEFT, RIGHT
-};
-enum icase_t {
-    i1, i2, i3, i4, i5
-};
-enum rmcase_t {
-    rm1, rm2, rm3, rm4, rm5, rm6
 };
 
 
@@ -31,7 +21,6 @@ struct rbNode {
     rbNode *r; // right child
     color_t color;
     RBKEY key;
-//    int occur; //add count to deal with multiple same key nodes
 
     rbNode(RBKEY val, color_t c, rbNode *p, rbNode *l, rbNode *r) :
             key(val), color(c), pa(), l(l), r(r) {}
@@ -50,7 +39,7 @@ struct rbNode {
 class RBTree {
 public:
     bool debug; // true to print tree
-
+private:
     rbNode *ro; // save root pointer
 
 public:
@@ -140,10 +129,6 @@ private:
     rbNode *_remove_(rbNode *&root, rbNode *n);
 
     void _repairRemove_(rbNode *&root, rbNode *n, rbNode *p);
-
-    rbNode *rmCase(rbNode *n, rmcase_t c);
-
-    rbNode *replace(rbNode *n, rbNode *child);
 
     void print(rbNode *tree, RBKEY key, lr_t dir);
 

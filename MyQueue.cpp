@@ -4,8 +4,6 @@
 
 #include "MyQueue.h"
 #include "FileParser.h"
-#include <iostream>
-#include <cstring>
 
 // a general qNode API is created
 template
@@ -25,12 +23,12 @@ void MyQueue<QUEUETYPE>::createQ() {
 //    head = 0;
 //    tail = 0;
     ;
+
 }
 
 template<class QUEUETYPE>
 QUEUETYPE *MyQueue<QUEUETYPE>::deQ() {
     if (head >= tail) {
-        std::cout << "***no element***" << std::endl;
         return nullptr;
     } else return &queue[head++];
 }
