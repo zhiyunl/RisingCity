@@ -10,13 +10,13 @@
 
 template<class QUEUETYPE>
 class MyQueue {
-public:
+private:
     QUEUETYPE queue[MAX_Q_SIZE];
 //    MyQueue();
     int head;// record head
 
     int tail;// record tail
-
+public:
     void createQ();
 
     QUEUETYPE *deQ();

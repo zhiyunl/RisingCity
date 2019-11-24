@@ -13,8 +13,8 @@ void FileParser::printCmdList() {
         next = nextCmd();
         cout << i + 1 << "th cmd is : ";
         cout << next->time << ": " << (next->type == INSERT ? "Insert(" : "PrintBuilding(");
-        if (next->para2) cout << next->para1 << "," << next->para2 << ")" << endl;
-        else cout << next->para1 << ")" << endl;
+        if (next->tt_bNum2) cout << next->bNum1 << "," << next->tt_bNum2 << ")" << endl;
+        else cout << next->bNum1 << ")" << endl;
         i++;
     }
 }
@@ -117,11 +117,11 @@ bool FileParser::hasCmd() {
     return cmdQueue->qLen() != 0;
 }
 
-FileParser::FileParser() {
-    cmdQueue = new MyQueue<Instruction>();
-    debug = false;
-}
-
 int FileParser::cmdTotal() {
     return cmdQueue->qLen();
 }
+
+//FileParser::FileParser() {
+//    cmdQueue = new MyQueue<Instruction>();
+//    debug = false;
+//}

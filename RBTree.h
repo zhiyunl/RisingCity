@@ -16,17 +16,17 @@ enum lr_t {
 
 
 struct rbNode {
+    RBKEY key;
+    color_t color;
     rbNode *pa; // parent
     rbNode *l; // left child
     rbNode *r; // right child
-    color_t color;
-    RBKEY key;
 
-    rbNode(RBKEY val, color_t c, rbNode *p, rbNode *l, rbNode *r) :
-            key(val), color(c), pa(), l(l), r(r) {}
-
-    rbNode() = default;
-
+//    rbNode(RBKEY val, color_t c, rbNode *p, rbNode *l, rbNode *r) :
+//            key(val), color(c), pa(p), l(l), r(r) {}
+    rbNode(RBKEY val, color_t c) :
+            key(val), color(c), pa(), l(), r() {}
+//    rbNode() = default;
 };
 
 // ---------------
@@ -61,18 +61,18 @@ public:
 //    void rbTraverseBFS();
 
     // init a red-black tree using array
-    void rbInit(RBKEY *arr); //use
+    static void rbInit(RBKEY *arr); //use
     // get grandparent
-    rbNode *grandP(rbNode *n);
+    static rbNode *grandP(rbNode *n);
 
     //get parent
-    rbNode *parent(rbNode *n);
+    static rbNode *parent(rbNode *n);
 
     // get sibling
-    rbNode *sibling(rbNode *n);
+    static rbNode *sibling(rbNode *n);
 
     // get uncle
-    rbNode *uncle(rbNode *n);
+    static rbNode *uncle(rbNode *n);
 
     //
     rbNode *rbSearch(RBKEY key, int mode);
@@ -82,13 +82,13 @@ public:
     // top level, manage insert conditions, create node
     void rbInsert(RBKEY key);
 
-    rbNode *rbRemove(RBKEY key);
+    bool rbRemove(RBKEY key);
 
     void print();
 
-    rbNode *priorNode(rbNode *tree);
+    static rbNode *priorNode(rbNode *tree);
 
-    rbNode *postNode(rbNode *tree);
+    static rbNode *postNode(rbNode *tree);
 
 private:
     // print
@@ -109,48 +109,42 @@ private:
 
     rbNode *_rbSearchIter_(rbNode *tree, RBKEY key) const;
 
-    rbNode *_maxNode_(rbNode *tree);
+    static rbNode *_maxNode_(rbNode *tree);
 
-    rbNode *_minNode_(rbNode *tree);
+    static rbNode *_minNode_(rbNode *tree);
 
-    rbNode *_priorNode_(rbNode *tree);
+    static rbNode *_priorNode_(rbNode *tree);
 
-    rbNode *_postNode_(rbNode *tree);
+    static rbNode *_postNode_(rbNode *tree);
 
-    void lRotate(rbNode *&root, rbNode *n);
+    static void lRotate(rbNode *&root, rbNode *n);
 
-    void rRotate(rbNode *&root, rbNode *n);
+    static void rRotate(rbNode *&root, rbNode *n);
 
     // lower level, just insert
-    void _insert_(rbNode *&root, rbNode *&n);
+    static void _insert_(rbNode *&root, rbNode *&n);
 
     void _repairInsert_(rbNode *&root, rbNode *&n);
 
-    rbNode *_remove_(rbNode *&root, rbNode *n);
+    static bool _remove_(rbNode *&root, rbNode *n);
 
-    void _repairRemove_(rbNode *&root, rbNode *n, rbNode *p);
+    static void _repairRemove_(rbNode *&root, rbNode *n, rbNode *p);
 
-    void print(rbNode *tree, RBKEY key, lr_t dir);
-
-
-//    static std::string _colorName_(color_t color);
+    static void print(rbNode *tree, RBKEY key, lr_t dir);
 
     void inCase1(rbNode *&root, rbNode *&n);
 
-    void inCase2(rbNode *&root, rbNode *&n);
+    static void inCase2(rbNode *&root, rbNode *&n);
 
     void inCase3(rbNode *&root, rbNode *&n);
 
     void inCase4(rbNode *&root, rbNode *&n);
 
+    static void rmCase1(rbNode *&root, rbNode *n);
+
+    static void rmCase2(rbNode *&root, rbNode *n);
+
 //    rbNode *findRoot(rbNode *n)
-#define rb_color(r) ((r)->color)
-#define rb_is_red(r)   ((r)->color==RED)
-#define rb_is_black(r)  ((r)->color==BLACK)
-#define rb_set_black(r)  do { (r)->color = BLACK; } while (0)
-#define rb_set_red(r)  do { (r)->color = RED; } while (0)
-#define rb_set_parent(r, p)  do { (r)->pa = (p); } while (0)
-#define rb_set_color(r, c)  do { (r)->color = (c); } while (0)
 };
 
 

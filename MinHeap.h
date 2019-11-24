@@ -16,6 +16,9 @@ struct mhNode {
 //    mhNode(int i, int i1, int i2);
     mhNode() = default;
 
+    mhNode(int b, int et, int tt) :
+            bNum(b), tt(tt), et(et), rbn(nullptr) {}
+
     int tt;
     int et;
     int bNum; // the only key to check a node
@@ -23,15 +26,16 @@ struct mhNode {
 };
 
 class MinHeap {
-
 public:
-    bool debug;
-    int len; // point to last element
-    mhNode heap[2000];
+    bool debug = false;
+
+    int len = 0; // point to last element
+
+    mhNode heap[2000]{};
 
     int init(mhNode *arr);
 
-    mhNode *insert(mhNode n);
+    mhNode *insert(mhNode *n);
 
     mhNode *heapifyUp(int mylen);
 

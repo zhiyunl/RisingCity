@@ -58,10 +58,3 @@ int MyQueue<QUEUETYPE>::qLen() {
     return tail - head;
 }
 
-//template<class QUEUETYPE>
-//MyQueue<QUEUETYPE>::MyQueue() {
-//    queue=new QUEUETYPE[MAX_Q_SIZE]{};
-//    head=0;
-//    tail=0;
-//}
-

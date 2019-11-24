@@ -296,7 +296,7 @@ void RBTree::rRotate(rbNode *&root, rbNode *n) {
 
 void RBTree::rbInsert(RBKEY key) {
     // possibly this could fail!
-    auto n = new rbNode(key, BLACK, nullptr, nullptr, nullptr);
+    auto n = new rbNode(key, BLACK); // delete in remove
     key->rbn = n;
     _insert_(this->ro, n);
     // without repair, it's correct
@@ -354,7 +354,7 @@ void RBTree::_repairInsert_(rbNode *&root, rbNode *&n) {
 
 void RBTree::print(rbNode *tree, RBKEY key, lr_t dir) {
     // recursively pre order print tree and relationship
-    if (tree != NULL) {
+    if (tree != nullptr) {
         if (dir == ROOT)    // root
             std::cout << tree->key->bNum << "(B) is root" << std::endl;
         else {               // subtree
@@ -369,7 +369,7 @@ void RBTree::print(rbNode *tree, RBKEY key, lr_t dir) {
 
 
 void RBTree::print() {
-    if (this->ro != NULL)
+    if (this->ro != nullptr)
         print(this->ro, this->ro->key, ROOT);
 }
 
@@ -411,7 +411,6 @@ void RBTree::inCase4(rbNode *&root, rbNode *&n) {
     // LR first step
     if (!gp) {
         // when gp is null, no lr or rl
-        ;
         if (this->debug) cout << "case 4.1:no gp on key=" << n->key->bNum << endl;
     } else if (n == n->pa->r && n->pa == gp->l) {
         // n is right child and p is left child, LR
@@ -445,67 +444,67 @@ void RBTree::inCase4(rbNode *&root, rbNode *&n) {
 
 
 void RBTree::_repairRemove_(rbNode *&root, rbNode *n, rbNode *p) {
-    rbNode *other;
+    rbNode *sib;
 
-    while ((!n || rb_is_black(n)) && n != root) {
+    while ((!n || n->color == BLACK) && n != root) {
         if (p->l == n) {
-            other = p->r;
-            if (other->color == RED) {
-                // Case 1: x的兄弟w是红色的
-                other->color = BLACK;
+            sib = p->r;
+            if (sib->color == RED) {
+                // Case 1: sibling of x is red
+                sib->color = BLACK;
                 p->color = RED;
                 lRotate(root, p);
-                other = p->r;
+                sib = p->r;
             }
-            if ((!other->l || rb_is_black(other->l)) &&
-                (!other->r || rb_is_black(other->r))) {
-                // Case 2: x的兄弟w是黑色，且w的俩个孩子也都是黑色的
-                rb_set_red(other);
+            if ((!sib->l || sib->l->color == BLACK) &&
+                (!sib->r || sib->r->color == BLACK)) {
+                // Case 2: black sibling, its children are black
+                sib->color = RED;
                 n = p;
                 p = parent(n);
             } else {
-                if (!other->r || rb_is_black(other->r)) {
-                    // Case 3: x的兄弟w是黑色的，并且w的左孩子是红色，右孩子为黑色。
-                    rb_set_black(other->l);
-                    rb_set_red(other);
-                    rRotate(root, other);
-                    other = p->r;
+                if (!sib->r || sib->r->color == BLACK) {
+                    // Case 3: sib is black, sib left red, right black
+                    sib->l->color = BLACK;
+                    sib->color = RED;
+                    rRotate(root, sib);
+                    sib = p->r;
                 }
-                // Case 4: x的兄弟w是黑色的；并且w的右孩子是红色的，左孩子任意颜色。
-                rb_set_color(other, p->color);
-                rb_set_black(p);
-                rb_set_black(other->r);
+                // Case 4: sib is black, sib .right red
+                sib->color = p->color;
+                p->color = BLACK;
+                sib->r->color = BLACK;
                 lRotate(root, p);
                 n = root;
                 break;
             }
         } else {
-            other = p->l;
-            if (other->color == RED) {
-                // Case 1: x的兄弟w是红色的
-                rb_set_black(other);
-                rb_set_red(p);
+            sib = p->l;
+            if (sib->color == RED) {
+                // Case 1: sib is red
+                sib->color = BLACK;
+                p->color = RED;
                 rRotate(root, p);
-                other = p->l;
+                sib = p->l;
             }
-            if ((!other->l || rb_is_black(other->l)) &&
-                (!other->r || rb_is_black(other->r))) {
-                // Case 2: x的兄弟w是黑色，且w的俩个孩子也都是黑色的
-                rb_set_red(other);
+            if ((!sib->l || sib->l->color == BLACK) &&
+                (!sib->r || sib->r->color == BLACK)) {
+                // Case 2: sib is black, sib children are black
+                sib->color = RED;
                 n = p;
                 p = parent(n);
             } else {
-                if (!other->l || rb_is_black(other->l)) {
-                    // Case 3: x的兄弟w是黑色的，并且w的左孩子是红色，右孩子为黑色。
-                    rb_set_black(other->r);
-                    rb_set_red(other);
-                    lRotate(root, other);
-                    other = p->l;
+                if (!sib->l || sib->l->color == BLACK) {
+                    // Case 3: sib is black, sib left red, right black
+                    sib->r->color = BLACK;
+                    sib->color = RED;
+                    lRotate(root, sib);
+                    sib = p->l;
                 }
-                // Case 4: x的兄弟w是黑色的；并且w的右孩子是红色的，左孩子任意颜色。
-                rb_set_color(other, p->color);
-                rb_set_black(p);
-                rb_set_black(other->l);
+                // Case 4:  sib is black, sib .right red
+                sib->color = p->color;
+                p->color = BLACK;
+                sib->l->color = BLACK;
                 rRotate(root, p);
                 n = root;
                 break;
@@ -513,95 +512,27 @@ void RBTree::_repairRemove_(rbNode *&root, rbNode *n, rbNode *p) {
         }
     }
     if (n)
-        rb_set_black(n);
+        n->color = BLACK;
 }
 
 
-rbNode *RBTree::_remove_(rbNode *&root, rbNode *n) {
-    rbNode *child, *p;
-    color_t c;
+bool RBTree::_remove_(rbNode *&root, rbNode *n) {
+    // when n has both children
     if ((n->l != nullptr) && (n->r != nullptr)) {
-        rbNode *rep = n;
-        rep = rep->r;
-        while (rep->l != nullptr)
-            rep = rep->l;
-
-        // "node节点"不是根节点(只有根节点不存在父节点)
-        if (parent(n)) {
-            if (parent(n)->l == n)
-                parent(n)->l = rep;
-            else
-                parent(n)->r = rep;
-        } else
-            // "node节点"是根节点，更新根节点。
-            root = rep;
-
-        // child是"取代节点"的右孩子，也是需要"调整的节点"。
-        // "取代节点"肯定不存在左孩子！因为它是一个后继节点。
-        child = rep->r;
-        p = parent(rep);
-        // 保存"取代节点"的颜色
-        c = rep->color;
-
-        // "被删除节点"是"它的后继节点的父节点"
-        if (p == n) {
-            p = rep;
-        } else {
-            // child不为空
-            if (child)
-                rb_set_parent(child, p);
-            p->l = child;
-
-            rep->r = n->r;
-            rb_set_parent(n->r, rep);
-        }
-
-        rep->pa = n->pa;
-        rep->color = n->color;
-        rep->l = n->l;
-        n->l->pa = rep;
-
-        if (c == BLACK)
-            _repairRemove_(root, child, p);
-
-        delete n;
-        return nullptr;
+        rmCase1(root, n);
+    } else {
+        rmCase2(root, n);
     }
-
-    if (n->l != nullptr)
-        child = n->l;
-    else
-        child = n->r;
-
-    p = n->pa;
-    // 保存"取代节点"的颜色
-    c = n->color;
-
-    if (child)
-        child->pa = p;
-
-    // "node节点"不是根节点
-    if (p) {
-        if (p->l == n)
-            p->l = child;
-        else
-            p->r = child;
-    } else
-        root = child;
-
-    if (c == BLACK)
-        _repairRemove_(root, child, p);
-    delete n;
-    return nullptr;
+    return true;
 }
 
 
-rbNode *RBTree::rbRemove(RBKEY key) {
+bool RBTree::rbRemove(RBKEY key) {
 //    rbNode *node = rbSearch(key, 0);
     rbNode *node = key->rbn;
     if (node != nullptr)
         return _remove_(ro, node);
-    else return nullptr;
+    else return false;
 }
 
 rbNode *RBTree::priorNode(rbNode *tree) {
@@ -612,4 +543,80 @@ rbNode *RBTree::postNode(rbNode *tree) {
     return _postNode_(tree);
 }
 
+void RBTree::rmCase1(rbNode *&root, rbNode *n) {
+    rbNode *child, *p;
+    color_t c;
+    rbNode *rep = n;
+    rep = rep->r;
+    while (rep->l != nullptr)
+        rep = rep->l;
 
+    // node is not root
+    if (parent(n)) {
+        if (parent(n)->l == n)
+            parent(n)->l = rep;
+        else
+            parent(n)->r = rep;
+    } else
+        // update root if replace is root
+        root = rep;
+
+    // child is replace's right,the one to be modify
+    // replace  has no left child, because its a successor
+    child = rep->r;
+    p = parent(rep);
+    // save color of rep
+    c = rep->color;
+
+    // deleted node is successor of parent
+    if (p == n) {
+        p = rep;
+    } else {
+        // child is not null
+        if (child)
+            child->pa = p;
+        p->l = child;
+
+        rep->r = n->r;
+        n->r->pa = rep;
+    }
+
+    rep->pa = n->pa;
+    rep->color = n->color;
+    rep->l = n->l;
+    n->l->pa = rep;
+
+    if (c == BLACK)
+        _repairRemove_(root, child, p);
+
+    delete n;
+}
+
+void RBTree::rmCase2(rbNode *&root, rbNode *n) {
+    rbNode *child, *p;
+    color_t c;
+    if (n->l != nullptr)
+        child = n->l;
+    else
+        child = n->r;
+
+    p = n->pa;
+    // save color
+    c = n->color;
+
+    if (child)
+        child->pa = p;
+
+    if (p) {// not root
+        if (p->l == n)
+            p->l = child;
+        else
+            p->r = child;
+    } else
+        root = child;
+
+    if (c == BLACK)
+        _repairRemove_(root, child, p);
+    delete n;
+
+}

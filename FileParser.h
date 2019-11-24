@@ -20,27 +20,28 @@ enum INSTRUCTION_TYPE {//0,   1,     2,       3
 struct Instruction {
     TIME time;
     enum INSTRUCTION_TYPE type;
-    PARAMETER para1;
-    PARAMETER para2;
+    PARAMETER bNum1;
+    PARAMETER tt_bNum2;
 
     // constructor
     Instruction(TIME ti, INSTRUCTION_TYPE t, PARAMETER p1, PARAMETER p2 = 0) :
-            time(ti), type(t), para1(p1), para2(p2) {}
+            time(ti), type(t), bNum1(p1), tt_bNum2(p2) {}
 
     Instruction() = default;
 };
 
 class FileParser {
-public:
+private:
     MyQueue<Instruction> *cmdQueue;
+public:
     bool debug;
 
-    FileParser();
+//    FileParser();
+
+    FileParser() :
+            cmdQueue(new MyQueue<Instruction>()), debug(false) {}
+
     void printCmdList();
-
-    static enum INSTRUCTION_TYPE insParser(const string &ins, PARAMETER para2);
-
-    int lineParser(string str);
 
     bool readFile(const string &fname);
 
@@ -49,6 +50,11 @@ public:
     bool hasCmd();
 
     int cmdTotal();
+
+private:
+    static INSTRUCTION_TYPE insParser(const string &ins, PARAMETER para2);
+
+    int lineParser(string str);
 };
 
 

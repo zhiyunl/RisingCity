@@ -31,7 +31,7 @@ int MinHeap::init(mhNode *arr) {
     while (arr[len].bNum != 0) {
         // heap start from 1 not 0;
         //heap[len+1] = arr[len];
-        insert(arr[len]);
+        insert(&arr[len]);
 //        len++; // handled in insert
     }
 // last element
@@ -39,16 +39,15 @@ int MinHeap::init(mhNode *arr) {
     return 0;
 }
 
-mhNode *MinHeap::insert(mhNode n) {
+mhNode *MinHeap::insert(mhNode *n) {
     /*
      * insert next to last node, heapify by compare it with parents,
      * swap if needed,
      * recursively*/
     // get where is last node
     if (debug) cout << "--insert----" << endl;
-    mhNode *p;
     //TODO modify heap - rbtree pointer outside
-    heap[++len] = n;
+    heap[++len] = *n;
     if (debug) {
         cout << "before heapify:" << endl;
         printHeap();
@@ -64,9 +63,10 @@ mhNode *MinHeap::heapifyUp(int mylen) {
      * compare parent and x, if parent is smaller, done
      * else, swap p_x and x
      * continuously until reach root or first node that satisfy 1st condition*/
+    static mhNode base;
     int index = mylen;
     int p_x = index / 2;
-    mhNode base = heap[mylen];
+    base = heap[mylen];
     while (true) {
         if (p_x > 0) {
             if (base.et > heap[p_x].et) {
@@ -103,9 +103,10 @@ mhNode *MinHeap::heapifyDn() {
      * if parent is smaller than min, done
      * else, swap parent and min node
      * continuously until reach leaf or first node that satisfy condition*/
+    static mhNode base;
     int index = 1;
     int x_child = index * 2;
-    mhNode base = heap[1];// start from root
+    base = heap[1];// start from root
     while (true) {
         if (x_child <= len) {
             // right child could be zero,
@@ -179,7 +180,7 @@ void MinHeap::removeMin() {
 // Exponentiation by squaring
 int MinHeap::pow(int base, int exp) {
     int result = 1;
-    for (;;) {
+    while (true) {
         if (exp & 1) result *= base;
         exp >>= 1;
         if (!exp) break;
@@ -221,7 +222,7 @@ void MinHeap::switchRoot(mhNode *p) {
 //            min = &heap[i];
 //        }
 //    }
-    static mhNode q;
+    static mhNode q{0, 0, 0};
     // TODO pointer of picker node and root change
     if (len <= 1) { //at most 1 element
         return;
@@ -236,3 +237,4 @@ void MinHeap::switchRoot(mhNode *p) {
     }
 
 }
+
