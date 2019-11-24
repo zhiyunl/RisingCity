@@ -12,18 +12,30 @@ class MyQueue<int>;
 template
 class MyQueue<Instruction>;
 
+//int queueTest() {
+//    MyQueue<int> q{};
+//    q.createQ();
+//    for (int i = 0; i < 20; i++) {
+////        auto *n = new Instruction(i, INSERT, i * 10);
+//        q.enQ(i);
+//    }
+////    cout << q.deQ() << endl;
+////    q.enQ();
+//    return 1;
+//}
+
 // circular list
 // [  head=first element tail=last element+1         ]
 // len = tail-head
 // store into tail%MAX_Q_SIZE
 // fetch head
+
 template<class QUEUETYPE>
 void MyQueue<QUEUETYPE>::createQ() {
     // this->queue;
 //    head = 0;
 //    tail = 0;
     ;
-
 }
 
 template<class QUEUETYPE>

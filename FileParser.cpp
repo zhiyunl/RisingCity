@@ -73,7 +73,7 @@ int FileParser::lineParser(string str) {
                 ++i;
                 break;
             default:
-//                cout << "wrong" << endl;
+                ++i; // maybe something else at the end, ignore it
                 break;
         }
     }

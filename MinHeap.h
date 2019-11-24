@@ -33,7 +33,7 @@ public:
 
     mhNode *insert(mhNode n);
 
-    mhNode *heapifyUp();
+    mhNode *heapifyUp(int mylen);
 
     mhNode *heapifyDn();
 

@@ -10,6 +10,17 @@
 
 using namespace std;
 
+//int minHeapTest() {
+//    KEYTYPE arr[20] = {2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+//    cout << "\n-------------Start Min Heap Test----------" << endl;
+//    myheap.debug = true;
+//    myheap.init(arr); // in-place modify
+//    myheap.removeMin();
+//    myheap.insert({20, 30, 40});
+////    myheap.printHeap();
+//    return 1;
+//}
+
 /*
  * use array to represent min heap
  * */
@@ -48,14 +59,14 @@ mhNode *MinHeap::insert(mhNode n) {
     return &heap[len];
 }
 
-mhNode *MinHeap::heapifyUp() {
+mhNode *MinHeap::heapifyUp(int mylen) {
     /* also called Percolation Up
      * compare parent and x, if parent is smaller, done
      * else, swap p_x and x
      * continuously until reach root or first node that satisfy 1st condition*/
-    int index = len;
+    int index = mylen;
     int p_x = index / 2;
-    mhNode base = heap[len];
+    mhNode base = heap[mylen];
     while (true) {
         if (p_x > 0) {
             if (base.et > heap[p_x].et) {
@@ -124,31 +135,6 @@ mhNode *MinHeap::heapifyDn() {
     return &heap[index / 2];// last new node pos
 }
 
-//mhNode MinHeap::removeMin(RBTree * &n) {
-//    /*
-//     * remove root node,
-//     * percolation down using last node*/
-//    if (debug) {
-//        cout << "----remove min----" << endl;
-//        printHeap();
-//    }
-//    mhNode min = heap[1];
-//    heap[1] = heap[len];// replace with last value
-//    // delete last node
-//    heap[len].bNum = 0;
-//    heap[len].et = 0;
-//    heap[len].tt = 0;
-//    len--;
-//    if (debug) {
-//        cout << "before heapify" << endl;
-//        printHeap();
-//    }
-//    // handle new pointer for rbtree
-////    n->ro->key =
-//            heapifyDn();// percolation down
-//    return min;
-//}
-
 void MinHeap::removeMin() {
     /*
      * remove root node,
@@ -168,7 +154,9 @@ void MinHeap::removeMin() {
     heap[len].tt = 0;
     heap[len].rbn = nullptr; // clear mh - rb
     len--;
-    if (len == 0) return;
+    if (len < 0) {
+        throw std::exception();
+    } else if (len == 0) return;
     if (debug) {
         cout << "before heapify" << endl;
         printHeap();
@@ -178,6 +166,7 @@ void MinHeap::removeMin() {
     heapifyDn();// percolation down
 //    return min;
 }
+
 //int MinHeap::decreaseKey(int index, int d) {
 //    heap[index] -= d;
 //    // TODO finish decrease Key
@@ -225,28 +214,25 @@ void MinHeap::printHeap() {
 void MinHeap::switchRoot(mhNode *p) {
     // find smallest building num child that have same et with root
     // bfs traversal, just one by one
-    // TODO change to not O(n)
-    mhNode *min = &heap[1];
-    if (heap[2].bNum == 0) return;
-    for (int i = 2; i < len + 1; i++) {
-        if (heap[1].et == heap[i].et && min->bNum > heap[i].bNum) {
-            min = &heap[i];
-        }
+    // TODO change to not O(n), already found by picker
+//    if (heap[2].bNum == 0) return;
+//    for (int i = 2; i < len + 1; i++) {
+//        if (heap[1].et == heap[i].et && min->bNum > heap[i].bNum) {
+//            min = &heap[i];
+//        }
+//    }
+    static mhNode q;
+    // TODO pointer of picker node and root change
+    if (len <= 1) { //at most 1 element
+        return;
+    } else {
+        q = *p;
+        *p = heap[1];
+        heap[1] = q;
+        // every node pointer to correct rbn
+        // maintain rbn - heap
+        p->rbn->key = p;
+        heap[1].rbn->key = &heap[1];
     }
-    mhNode q = *min;
-    *min = heap[1];
-    heap[1] = q;
-    // every node pointer to correct rbn
-    // maintain rbn - heap
-    min->rbn->key = min;
-    heap[1].rbn->key = &heap[1];
+
 }
-
-
-
-
-//mhNode::mhNode(int i, int i1, int i2) {
-//    bNum=i;
-//    et=i1;
-//    tt=i2;
-//}

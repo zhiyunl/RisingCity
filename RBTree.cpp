@@ -4,6 +4,7 @@
 #include "RBTree.h"
 #include <iostream>
 #include "MinHeap.h"
+#include <exception>
 
 using namespace std;
 
@@ -11,6 +12,35 @@ using namespace std;
 // possible type of RBKEY is listed below,
 // otherwise, there will be error
 
+
+//int RBTreeTest() {
+//    cout << "\n-------------Start Red Black Tree Test----------" << endl;
+//    KEYTYPE rb[] = {5, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12};
+//    int ilen = sizeof(rb) / sizeof(rb[0]);
+//
+//    KEYTYPE *node = nullptr;
+////    auto tree = new RBTree<int>();
+//    myTree->debug = true;
+//    for (int i = 0; i < ilen; i++) {
+////        tree->rbInsert(rb[i]);
+////        node=new Instruction(i,INSERT,i*2,rb[i]);
+//        node = new KEYTYPE{i * 20, 0, i * 5};
+//        myTree->rbInsert(node);
+////        cout << "== insert: " << rb[i] << endl;
+//        if (myTree->debug) {
+//            cout << "== result " << endl;
+//            myTree->print();
+//            myTree->rbTraverse();
+//            cout << endl;
+//        }
+//    }
+//    cout << "==final result== " << endl;
+//    myTree->print();
+////    tree->rbSearch(1);
+//    myTree->rbRemove(node);
+//    myTree->print();
+//    return 1;
+//}
 
 RBTree::RBTree() {
     ro = nullptr;
@@ -287,9 +317,8 @@ void RBTree::_insert_(rbNode *&root, rbNode *&n) {
     while (p) { // search iteratively like a bst
         pp = p;
         if (n->key->bNum == p->key->bNum) {
-            // deal with same key by adding a occur
-//            p->occur += n->occur;
-            throw;
+            // TODO inserting same bNum, exit and print
+            throw std::exception();
             break;
         } else p = n->key->bNum > p->key->bNum ? p->r : p->l;
     }
@@ -535,8 +564,8 @@ rbNode *RBTree::_remove_(rbNode *&root, rbNode *n) {
         if (c == BLACK)
             _repairRemove_(root, child, p);
 
-//        delete n;
-        return n;
+        delete n;
+        return nullptr;
     }
 
     if (n->l != nullptr)
@@ -562,8 +591,8 @@ rbNode *RBTree::_remove_(rbNode *&root, rbNode *n) {
 
     if (c == BLACK)
         _repairRemove_(root, child, p);
-//    delete n;
-    return n;
+    delete n;
+    return nullptr;
 }
 
 
