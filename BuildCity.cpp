@@ -4,12 +4,14 @@
 
 #include "BuildCity.h"
 
-
 mhNode *BuildCity::fromIns2Heap(Instruction *ins) {
     // parser Instruction make it mhNode
     static mhNode q;
     if (ins->type == INSERT) {
-        q = {ins->bNum1, 0, ins->tt_bNum2};
+        q.bNum = ins->bNum1;
+        q.tt = ins->tt_bNum2;
+        q.et = 0;
+        q.rbn = nullptr;
         return &q; //  to be delete
     }
     return nullptr;
@@ -50,7 +52,7 @@ void BuildCity::atWork(mhNode *mhn) {
     // modify minheap and red black tree
     mhn->et += 1; // excuted time increment
     workdays++; // counter increment
-    global++; //
+//    global++; //
 }
 
 void BuildCity::printOne(mhNode *mhn) {
@@ -62,7 +64,7 @@ void BuildCity::printNone() {
 }
 
 void BuildCity::printFinish(mhNode *mhn) {
-    cout << "(" << mhn->bNum << "," << global << ")" << endl;
+    cout << "(" << mhn->bNum << "," << global + 1 << ")" << endl;
 }
 
 void BuildCity::printFailure() {
@@ -75,11 +77,7 @@ void BuildCity::insertCMD(Instruction *ins) {
     mhn = fromIns2Heap(ins);
     // first insert heap, get pointer of newly inserted node
 // TODO when insert same building num, should exit. handled in red-black tree
-//    if (myTree->rbSearch(mhn, 0) != nullptr) {
-//        cout << "error, same building num" << endl;
-//        return;
-//    }
-    // only  insert like a normal heap, need heapifyUp
+    // only insert like a normal heap, need heapifyUp
     mhn = myheap.insert(mhn);
     // manage pointer in rbInsert
     // insert the pointer into rbtree
@@ -90,7 +88,6 @@ void BuildCity::insertCMD(Instruction *ins) {
         myheap.heapifyUp(myheap.len);
         newInsert--;
     }
-    // pointer from rbNode to mhNode is maintained
 }
 
 bool BuildCity::printBuilding(Instruction *ins) {
@@ -113,7 +110,7 @@ bool BuildCity::printBuilding(Instruction *ins) {
         // search using building num in red black tree
         if (p == nullptr) printNone();
         else if (debug) cout << "PrintBuildings ";
-        // TODO don't change into in-order traversal, debug this
+        // TODO don't change into in-order traversal
         while (p != nullptr && p->key->bNum <= ins->tt_bNum2) {// not null and less than bNum2
             printOne(p->key);
             p = myTree->postNode(p);// find next
@@ -125,18 +122,8 @@ bool BuildCity::printBuilding(Instruction *ins) {
 }
 
 void BuildCity::reinsert(mhNode *mhn) {
-    // only  insert like a normal heap, need heapifyUp
-    // just a decrease key,heapify down
-    // pointer is already managed during
-    // TODO no need
-//    myheap.removeMin(); // save removed node
-//    mhn = myheap.insert(*mhn);
-    // manage pointer in rbInsert
-    // insert the pointer into rbtree
-//    myTree->rbInsert(mhn);
-//    myheap.heapifyUp();
+    // already inserted, just heapifyUp
     myheap.heapifyDn();
-    // pointer from rbNode to mhNode is maintained
 }
 
 bool BuildCity::endJudge() {
@@ -152,7 +139,7 @@ bool BuildCity::timeLine() {
             case FAIL:
                 printFailure();
                 return false;
-            case INIT:
+            case INIT: // check cmd and make sure there is cmd in cmdQueue
                 if (myParser->hasCmd()) {
                     if (debug) cout << "successfully loaded " << myParser->cmdTotal() << " instructions" << endl;
                     state = DAY_BEGIN;
@@ -160,31 +147,33 @@ bool BuildCity::timeLine() {
                     cout << "No input command" << endl;
                     state = FAIL;
                 }
+                // finish loading day 0 cmd;
                 break;
-            case DAY_BEGIN: // start from loading information
-                state = HAS_CMD;
-                break;
-            case HAS_CMD:
-                next = myParser->nextCmd();
+            case DAY_BEGIN: // check cmd
+                // global timer increment done during DAY_END
+                if (next == nullptr) next = myParser->nextCmd();
                 if (debug >= LEVEL1) {
-                    if (next == nullptr) cout << "***no element***" << std::endl;
+                    if (next == nullptr) cout << "***no element any more***" << std::endl;
                     else cout << "loaded next" << endl;
                 }
-                state = INSERT_J;
+                state = TIMER_J;
                 break;
-            case INSERT_J: // judge whether insert the cmd into tree
-                if (next != nullptr && next->time <= global) {
-                    if (next->type == INSERT)
-                        insertCMD(next);// TODO print should be the beginning of the day, finish should be end
-                    else printBuilding(next); //command to be finished today won't print out
-                    state = HAS_CMD;
-                } else state = PICK_J;
+            case TIMER_J: //check global timer
+                if (next != nullptr && next->time <= global)
+                    state = CMDTYPE_J;
+                else state = PICK_J;
                 break;
-            case PICK_J: // judge whether pick a new instruction from the tree
-                if (worker == nullptr) workPicker();
-                // verify picker
-                if (picker > 0) state = AT_WORK;
-                else {// no building waiting in heap,
+            case CMDTYPE_J: // check cmd type print or insert
+                if (next->type == INSERT)
+                    insertCMD(next);
+                else printBuilding(next); //building finished today print out before
+                next = nullptr; // clear next after use
+                state = PICK_J;
+                break;
+            case PICK_J: // check whether pick a new instruction
+                if (worker == nullptr) workPicker(); // pick a building
+                if (picker > 0) state = AT_WORK; // verify picker
+                else {// no building waiting in tree,
                     global++;//increment global timer
                     state = END_J; // go back to wait for cmd
                 }
@@ -194,9 +183,8 @@ bool BuildCity::timeLine() {
                 // before is under global=0
                 // TODO global timer ++ after this line, so this separates the day
                 //  first insert day is 0, means day one, time already pass 1,
-
                 if (debug >= LEVEL1) cout << "worked 1 day" << endl;
-                // pare1 is building number, tt_bNum2 is time
+                // bNum1 is building number, tt_bNum2 is total time
                 if (worker == nullptr) throw exception();
                 if (worker->et >= worker->tt) { //judge whether it's finished ahead
                     if (debug) {
@@ -214,9 +202,7 @@ bool BuildCity::timeLine() {
                     if (debug) cout << "finished 5 days,put back bNum=" << worker->bNum << endl;
                     workdays = 0;
                     state = REINSERT;
-                } else state = INSERT_J; //
-                break;
-            case DAY_END:
+                } else state = DAY_END; //
                 break;
             case REINSERT:
                 // TODO remove from heap, reinsert, heapify
@@ -227,14 +213,18 @@ bool BuildCity::timeLine() {
                     myheap.heapifyUp(myheap.len - newInsert + 1);// for the new inserted node in the middle
                 }
                 worker = nullptr; // clear worker
-                state = INSERT_J;
+                state = DAY_END;
                 break;
             case END_J:
                 if (endJudge()) state = DONE;
                 else {
                     worker = nullptr;
-                    state = INSERT_J;
+                    state = DAY_END;
                 }
+                break;
+            case DAY_END:
+                global++;
+                state = DAY_BEGIN;
                 break;
             case DONE:
 //                printFinish(worker);

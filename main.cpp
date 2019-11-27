@@ -18,7 +18,6 @@ int main(int argc, char const *argv[]) {
      * Must use Red-Black Tree to manage, using node
      * */
     FileParser myParser{}; // process input and convert to cmd
-
     ofstream out("output_file.txt");
     auto *coutbuf = cout.rdbuf();
     DEBUG debug = PRINTDEBUG; // debug

@@ -8,11 +8,6 @@
 
 using namespace std;
 
-// when using  , compiler generate class automatically
-// possible type of RBKEY is listed below,
-// otherwise, there will be error
-
-
 //int RBTreeTest() {
 //    cout << "\n-------------Start Red Black Tree Test----------" << endl;
 //    KEYTYPE rb[] = {5, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12};
@@ -167,12 +162,6 @@ rbNode *RBTree::rbSearch(RBKEY key, int mode) {
     return mode == 0 ? _rbSearch_(ro, key) : _rbSearchIter_(ro, key);
 }
 
-//rbNode *RBTree::rbSearchIter(RBKEY key) {
-//    return _rbSearchIter_(this->ro, key);
-//}
-
-// private, iteratively search node by key
-
 rbNode *RBTree::_rbSearchIter_(rbNode *tree, RBKEY key) const {
     // return right nearest key if no such node found
     // last right parent
@@ -318,6 +307,7 @@ void RBTree::_insert_(rbNode *&root, rbNode *&n) {
         pp = p;
         if (n->key->bNum == p->key->bNum) {
             // TODO inserting same bNum, exit and print
+            cout << "Inserting Same Building Number" << endl;
             throw std::exception();
             break;
         } else p = n->key->bNum > p->key->bNum ? p->r : p->l;
@@ -333,21 +323,21 @@ void RBTree::_insert_(rbNode *&root, rbNode *&n) {
 
 
 void RBTree::_repairInsert_(rbNode *&root, rbNode *&n) {
+    // allow function call recursively
     rbNode *p = parent(n);
     if (!p) { // parent doesn't exists
-        inCase1(root, n); // n is root node,set black
-    } else if (p->color == BLACK) {  // no two consecutive red, no repair
-//        inCase2(root,n);
+        _inCaseRoot_(root, n); // n is root node,set black
+    } else if (p->color == BLACK) { ; // no two consecutive red, no repair
         if (this->debug) cout << "case 2:no need on key=" << n->key->bNum << endl;
     } else if (uncle(n) && uncle(n)->color == RED) {
         // has red uncle and red parent
         // flip color, recursively running repair
         if (this->debug) cout << "case 3: flip on key=" << n->key->bNum << endl;
-        inCase3(root, n);
+        _inCaseXYr_(root, n); // recursive step
     } else {
-        // LL LR RR RL,
+        // when uncle is black, LL LR RR RL
         if (this->debug) cout << "case 4:rotate on key=" << n->key->bNum << endl;
-        inCase4(root, n);
+        _inCaseXYb_(root, n);
     }
 }
 
@@ -374,18 +364,13 @@ void RBTree::print() {
 }
 
 
-void RBTree::inCase1(rbNode *&root, rbNode *&n) {
+void RBTree::_inCaseRoot_(rbNode *&root, rbNode *&n) {
     n->color = BLACK; // black root
     if (this->debug) cout << "case 1:root insert on key=" << n->key->bNum << endl;
 }
 
 
-void RBTree::inCase2(rbNode *&root, rbNode *&n) {
-    ;
-}
-
-
-void RBTree::inCase3(rbNode *&root, rbNode *&n) {
+void RBTree::_inCaseXYr_(rbNode *&root, rbNode *&n) {
     // parent and uncle are red, flip color
     n->pa->color = BLACK;
     uncle(n)->color = BLACK;
@@ -396,43 +381,38 @@ void RBTree::inCase3(rbNode *&root, rbNode *&n) {
 }
 
 
-void RBTree::inCase4(rbNode *&root, rbNode *&n) {
-    // complicated
+void RBTree::_inCaseXYb_(rbNode *&root, rbNode *&n) {
     // 1. no uncle, same as uncle is black
     // 2. uncle is black, pa=gp.left and pa.left=n, LL
     // 3. .. pa=gp.ro and pa.ro = n, rr
     // 4. .. pa=gp.l and pa.ro = n, lr
     // 5. .. pa=gp.ro and pa.l = n. rl
     // rotate LL,RR,LR,RL in parent
-    // LR means lrotate on p then rrotate on gp
-    // RL means rtotate on p then lrotate on gp
-//    rbNode  *p = parent(n);
+    // LR means lRotate on p then rRotate on gp
+    // RL means rRotate on p then lRotate on gp
     rbNode *gp = parent(n->pa);
     // LR first step
-    if (!gp) {
-        // when gp is null, no lr or rl
+    if (!gp) { // gp is null, do nothing
         if (this->debug) cout << "case 4.1:no gp on key=" << n->key->bNum << endl;
-    } else if (n == n->pa->r && n->pa == gp->l) {
-        // n is right child and p is left child, LR
+    } else if (n == n->pa->r && n->pa == gp->l) { //LRb, same as LR
+        // first step of LR
         if (this->debug) cout << "case 4.2:LR step1 on key=" << n->key->bNum << endl;
         lRotate(root, n->pa);
         if (this->debug) print();
         n = n->l;
-    } else if (n == n->pa->l && n->pa == gp->r) {
-        // RL first step
+    } else if (n == n->pa->l && n->pa == gp->r) { // RLb, same as RL
+        // first step of RL
         if (this->debug) cout << "case 4.3:RL step1 on key=" << n->key->bNum << endl;
         rRotate(root, n->pa);
         if (this->debug) print();
         n = n->r;
     }
-//    p = parent(n);
     gp = parent(n->pa);
-    // LL or second step of LR
-    if (n == n->pa->l) {
+    if (n == n->pa->l) {// LL or second step of LR
         if (this->debug) cout << "case 4.4:R rotation on key=" << n->pa->key->bNum << endl;
         rRotate(root, gp);
         if (this->debug) print();
-    } else {    // RR or second step of RL
+    } else { // RR or second step of RL
         if (this->debug) cout << "case 4.5:L rotation on key=" << n->pa->key->bNum << endl;
         lRotate(root, gp);
         if (this->debug) print();
@@ -444,8 +424,9 @@ void RBTree::inCase4(rbNode *&root, rbNode *&n) {
 
 
 void RBTree::_repairRemove_(rbNode *&root, rbNode *n, rbNode *p) {
+    // remove has many cases
+    // basically, 1.
     rbNode *sib;
-
     while ((!n || n->color == BLACK) && n != root) {
         if (p->l == n) {
             sib = p->r;
@@ -519,9 +500,9 @@ void RBTree::_repairRemove_(rbNode *&root, rbNode *n, rbNode *p) {
 bool RBTree::_remove_(rbNode *&root, rbNode *n) {
     // when n has both children
     if ((n->l != nullptr) && (n->r != nullptr)) {
-        rmCase1(root, n);
+        _rmCase1_(root, n);
     } else {
-        rmCase2(root, n);
+        _rmCase2_(root, n);
     }
     return true;
 }
@@ -543,78 +524,58 @@ rbNode *RBTree::postNode(rbNode *tree) {
     return _postNode_(tree);
 }
 
-void RBTree::rmCase1(rbNode *&root, rbNode *n) {
-    rbNode *child, *p;
+void RBTree::_rmCase1_(rbNode *&root, rbNode *n) {
+    // both children exist
+    rbNode *rep_r, *p;
     color_t c;
-    rbNode *rep = n;
-    rep = rep->r;
-    while (rep->l != nullptr)
-        rep = rep->l;
-
-    // node is not root
-    if (parent(n)) {
-        if (parent(n)->l == n)
-            parent(n)->l = rep;
+    p = parent(n);
+    // find the successor node
+    rbNode *rep = _postNode_(n);// replace node if deleting a degree 2 node
+    // parent -> rep
+    if (p) {// node is not root
+        if (p->l == n)
+            p->l = rep;
         else
-            parent(n)->r = rep;
-    } else
-        // update root if replace is root
-        root = rep;
+            p->r = rep;
+    } else root = rep;// replace root if n is root
 
     // child is replace's right,the one to be modify
     // replace  has no left child, because its a successor
-    child = rep->r;
+    rep_r = rep->r; // save rep.right
+    c = rep->color; // save color of rep
     p = parent(rep);
-    // save color of rep
-    c = rep->color;
-
-    // deleted node is successor of parent
-    if (p == n) {
-        p = rep;
-    } else {
-        // child is not null
-        if (child)
-            child->pa = p;
-        p->l = child;
-
-        rep->r = n->r;
+    if (p == n) { // rep only has right child
+        p = rep; // just connect
+    } else { // has left child
+        if (rep_r) rep_r->pa = p;// rep -> p
+        p->l = rep_r; //p -> rep
+        rep->r = n->r; // child pointer
         n->r->pa = rep;
     }
-
+    // do replace
     rep->pa = n->pa;
     rep->color = n->color;
     rep->l = n->l;
     n->l->pa = rep;
 
-    if (c == BLACK)
-        _repairRemove_(root, child, p);
-
+    if (c == BLACK) // Rb0 case 1 py is black
+        _repairRemove_(root, rep_r, p);
+    else; // Rb0 case 2 py is red
     delete n;
 }
 
-void RBTree::rmCase2(rbNode *&root, rbNode *n) {
+void RBTree::_rmCase2_(rbNode *&root, rbNode *n) {
+    // only one child of deleted node
     rbNode *child, *p;
     color_t c;
-    if (n->l != nullptr)
-        child = n->l;
-    else
-        child = n->r;
-
-    p = n->pa;
-    // save color
-    c = n->color;
-
-    if (child)
-        child->pa = p;
-
+    child = (n->l) ? n->l : n->r;
+    p = parent(n);
+    c = n->color;// save color
+    if (child) child->pa = p; //child -> p
     if (p) {// not root
-        if (p->l == n)
-            p->l = child;
-        else
-            p->r = child;
-    } else
-        root = child;
-
+        if (p->l == n) p->l = child;
+        else p->r = child;
+    } else root = child;
     if (c == BLACK)
         _repairRemove_(root, child, p);
     delete n;

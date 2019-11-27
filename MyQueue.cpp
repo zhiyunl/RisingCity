@@ -5,7 +5,9 @@
 #include "MyQueue.h"
 #include "FileParser.h"
 
-// a general qNode API is created
+// when using  , compiler generate class automatically
+// possible type of RBKEY is listed below,
+// otherwise, there will be error
 template
 class MyQueue<int>;
 

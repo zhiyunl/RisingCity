@@ -189,7 +189,7 @@ int MinHeap::pow(int base, int exp) {
     return result;
 }
 
-void MinHeap::mhRrintNode(int index) {
+void MinHeap::mhPrintNode(int index) {
     std::cout << " [" << heap[index].bNum << "," << heap[index].et << "," << heap[index].tt << "] ";
 }
 
@@ -207,7 +207,7 @@ void MinHeap::printHeap() {
             std::cout << std::endl;
             level++;
         }
-        mhRrintNode(i++);
+        mhPrintNode(i++);
     }
     std::cout << "\n---------" << std::endl;
 }
@@ -222,7 +222,7 @@ void MinHeap::switchRoot(mhNode *p) {
 //            min = &heap[i];
 //        }
 //    }
-    static mhNode q{0, 0, 0};
+    static mhNode q;
     // TODO pointer of picker node and root change
     if (len <= 1) { //at most 1 element
         return;

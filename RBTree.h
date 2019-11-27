@@ -22,11 +22,8 @@ struct rbNode {
     rbNode *l; // left child
     rbNode *r; // right child
 
-//    rbNode(RBKEY val, color_t c, rbNode *p, rbNode *l, rbNode *r) :
-//            key(val), color(c), pa(p), l(l), r(r) {}
     rbNode(RBKEY val, color_t c) :
             key(val), color(c), pa(), l(), r() {}
-//    rbNode() = default;
 };
 
 // ---------------
@@ -88,7 +85,7 @@ public:
 
     static rbNode *priorNode(rbNode *tree);
 
-    static rbNode *postNode(rbNode *tree);
+    rbNode *postNode(rbNode *tree);
 
 private:
     // print
@@ -122,29 +119,26 @@ private:
     static void rRotate(rbNode *&root, rbNode *n);
 
     // lower level, just insert
-    static void _insert_(rbNode *&root, rbNode *&n);
+    void _insert_(rbNode *&root, rbNode *&n);
 
     void _repairInsert_(rbNode *&root, rbNode *&n);
 
-    static bool _remove_(rbNode *&root, rbNode *n);
+    bool _remove_(rbNode *&root, rbNode *n);
 
-    static void _repairRemove_(rbNode *&root, rbNode *n, rbNode *p);
+    void _repairRemove_(rbNode *&root, rbNode *n, rbNode *p);
 
     static void print(rbNode *tree, RBKEY key, lr_t dir);
 
-    void inCase1(rbNode *&root, rbNode *&n);
+    void _inCaseRoot_(rbNode *&root, rbNode *&n);
 
-    static void inCase2(rbNode *&root, rbNode *&n);
+    void _inCaseXYr_(rbNode *&root, rbNode *&n);
 
-    void inCase3(rbNode *&root, rbNode *&n);
+    void _inCaseXYb_(rbNode *&root, rbNode *&n);
 
-    void inCase4(rbNode *&root, rbNode *&n);
+    void _rmCase1_(rbNode *&root, rbNode *n);
 
-    static void rmCase1(rbNode *&root, rbNode *n);
+    void _rmCase2_(rbNode *&root, rbNode *n);
 
-    static void rmCase2(rbNode *&root, rbNode *n);
-
-//    rbNode *findRoot(rbNode *n)
 };
 
 

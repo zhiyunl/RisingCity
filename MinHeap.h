@@ -14,11 +14,9 @@
 
 struct mhNode {
 //    mhNode(int i, int i1, int i2);
+//    mhNode(int b, int et, int tt) : bNum(b),  et(et),tt(tt),rbn(nullptr) {};
+
     mhNode() = default;
-
-    mhNode(int b, int et, int tt) :
-            bNum(b), tt(tt), et(et), rbn(nullptr) {}
-
     int tt;
     int et;
     int bNum; // the only key to check a node
@@ -45,7 +43,7 @@ public:
     void removeMin();
 
 //    int decreaseKey(int index, int d);
-    void mhRrintNode(int index);
+    void mhPrintNode(int index);
 
     void printHeap();
 
