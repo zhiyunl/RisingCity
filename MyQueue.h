@@ -1,6 +1,11 @@
-//
-// Created by zhiyunl on 11/19/19.
-//
+/*
+ * @Author: zhiyunl
+ * @Date: 2019-11-19 22:21:58
+ * @LastEditors: zhiyunl
+ * @LastEditTime: 2019-11-27 22:26:08
+ * @Description: 
+ */
+
 
 #ifndef RISINGCITY_MYQUEUE_H
 #define RISINGCITY_MYQUEUE_H
@@ -12,18 +17,13 @@ template<class QUEUETYPE>
 class MyQueue {
 private:
     QUEUETYPE queue[MAX_Q_SIZE];
-//    MyQueue();
     int head;// record head
-
     int tail;// record tail
 public:
-    void createQ();
-
-    QUEUETYPE *deQ();
-
-    void enQ(QUEUETYPE key);
-
-    int qLen();
+    void createQ();// create an empty queue
+    QUEUETYPE *deQ();// dequeue operation
+    void enQ(QUEUETYPE key);// enqueue operation
+    int qLen();// reuturn queue length
 };
 
 

@@ -20,7 +20,7 @@ int main(int argc, char const *argv[]) {
     FileParser myParser{}; // process input and convert to cmd
     ofstream out("output_file.txt");
     auto *coutbuf = cout.rdbuf();
-    DEBUG debug = PRINTDEBUG; // debug
+    DEBUG debug = NODEBUG; // debug
     string filename = argv[1];
     if (debug == NODEBUG) {
         // redirect file to output.txt
