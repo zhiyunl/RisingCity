@@ -142,6 +142,12 @@ bool BuildCity::timeLine() {
             case INIT: // check cmd and make sure there is cmd in cmdQueue
                 if (myParser->hasCmd()) {
                     if (debug) cout << "successfully loaded " << myParser->cmdTotal() << " instructions" << endl;
+                    // handle insert at 0
+                    next = myParser->nextCmd(); // initially load zero cmd
+                    if (next != nullptr && next->time <= global) {
+                        insertCMD(next);
+                        next = nullptr;
+                    }
                     state = DAY_BEGIN;
                 } else {
                     cout << "No input command" << endl;
@@ -151,6 +157,7 @@ bool BuildCity::timeLine() {
                 break;
             case DAY_BEGIN: // check cmd
                 // global timer increment done during DAY_END
+//                global++; // day 1
                 if (next == nullptr) next = myParser->nextCmd();
                 if (debug >= LEVEL1) {
                     if (next == nullptr) cout << "***no element any more***" << std::endl;
@@ -180,9 +187,6 @@ bool BuildCity::timeLine() {
                 break;
             case AT_WORK:
                 atWork(worker);
-                // before is under global=0
-                // TODO global timer ++ after this line, so this separates the day
-                //  first insert day is 0, means day one, time already pass 1,
                 if (debug >= LEVEL1) cout << "worked 1 day" << endl;
                 // bNum1 is building number, tt_bNum2 is total time
                 if (worker == nullptr) throw exception();
@@ -192,7 +196,6 @@ bool BuildCity::timeLine() {
                         else cout << "finished ahead" << endl;
                     }
                     printFinish(worker);
-                    // TODO, after finish, remove worker from heap and rbtree
                     myTree->rbRemove(worker);
                     myheap.removeMin();// actually we make sure worker is at min
                     // clear worker later
@@ -200,14 +203,13 @@ bool BuildCity::timeLine() {
                     state = END_J;
                 } else if (workdays >= 5) { //finish 5 days
                     if (debug) cout << "finished 5 days,put back bNum=" << worker->bNum << endl;
-                    workdays = 0;
                     state = REINSERT;
+                    workdays = 0;
                 } else state = DAY_END; //
                 break;
             case REINSERT:
-                // TODO remove from heap, reinsert, heapify
                 //  don't remove and insert, just heapify
-                reinsert(worker);// actually decreaseKey + heapify Down
+                reinsert(worker);// actually heapify Down
                 for (; newInsert > 0; newInsert--) { // handle up to five new insert during the middle of construction
                     // heapify new inserted node using a fifo scheme.
                     myheap.heapifyUp(myheap.len - newInsert + 1);// for the new inserted node in the middle
